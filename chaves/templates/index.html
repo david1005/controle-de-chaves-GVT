@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Principal</title>
+    <link rel="stylesheet" href="../static/css/index.css" />
+    <link rel="icon" type="image/x-icon" href="../static/images/icon-home.png" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-custom px-3">
+    <div class="container-fluid">
+        <a class="navbar-brand">Controle de Chaves</a>
+
+        <button class="navbar-toggler" type="button"
+        data-bs-toggle="collapse" data-bs-target="#menuNav"
+        aria-controls="menuNav" aria-expanded="false" aria-label="Abrir menu">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="menuNav">
+        <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+            <a class="nav-link" href="index.html">Início</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="retirada.html">Retirada</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="devolucao.html">Devolução</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="cadastro.html">Cadastro</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="relatorios.html">Relatórios</a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+            <i class="fa-solid fa-circle-user me-2" style="font-size: 1.4rem;"></i>
+            <span>João Silva</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item text-danger" href="login.html"><i class="fa-solid fa-right-from-bracket me-2"></i>Sair</a></li>
+            </ul>
+        </li>
+        </ul>
+        </div>
+
+    </div>
+    </nav>
+
+    <div class="card-wrapper">
+        <div class="card">
+            <div class="card-icon">
+            <i class="fa-solid fa-user-plus"></i>
+            </div>
+            <div class="card-body">
+            <h5 class="card-title">Cadastro</h5>
+            <p class="card-text">Cadastre novas chaves ou pessoas autorizadas a realizar movimentações no sistema.</p>
+            <a href="cadastro.html" class="btn btn-primary">Acessar</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-icon">
+            <i class="fa-solid fa-list-check"></i>
+            </div>
+            <div class="card-body">
+            <h5 class="card-title">Lista de Chaves</h5>
+            <p class="card-text">Visualize as chaves cadastradas, seu status atual e quem está com cada uma no momento.</p>
+            <a href="lista.html" class="btn btn-primary">Acessar</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-icon">
+            <i class="fa-solid fa-key"></i>
+            </div>
+            <div class="card-body">
+            <h5 class="card-title">Retirada de Chaves</h5>
+            <p class="card-text">Registre a retirada de chaves de forma rápida e organizada.</p>
+            <a href="retirada.html" class="btn btn-primary">Acessar</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-icon">
+            <i class="fa-solid fa-rotate-left"></i>
+            </div>
+            <div class="card-body">
+            <h5 class="card-title">Devolução de Chaves</h5>
+            <p class="card-text">Confirme a devolução das chaves ao setor responsável.</p>
+            <a href="devolucao.html" class="btn btn-primary">Acessar</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-icon">
+            <i class="fa-solid fa-file-lines"></i>
+            </div>
+            <div class="card-body">
+            <h5 class="card-title">Relatórios</h5>
+            <p class="card-text">Visualize relatórios completos de movimentações.</p>
+            <a href="relatorios.html" class="btn btn-primary">Acessar</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

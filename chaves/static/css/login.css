@@ -1,0 +1,72 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: content-box;
+}
+
+body{
+  font-family: "Montserrat";
+  color: #252424;
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(7, 9, 36);
+  background-size: cover;
+}
+
+form {
+  background-color: white;
+  padding: 75px;
+  border-radius: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.barra-horizontal {
+  background-color:  #dab214;
+  height: 4px;
+  width: 215px;
+}
+
+.lembrar-me{
+  display: flex;
+  gap: 5px;
+}
+
+.campo-input {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.titulo {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+a {
+  padding: 10px;
+  align-self: center;
+  text-align: center;
+  width: 160px;
+  border-radius: 30px;
+  background-image: linear-gradient( #dab214,  #dab214d0);
+  border: solid 1px  #dab214;
+  border-right-width: 4px;
+  border-bottom-width: 4px;
+  font-size: 16px;
+  color: white;
+  text-transform: uppercase;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+input {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  background-color: #ddd7d7;
+}
