@@ -108,7 +108,7 @@ body {
 .card {
   width: 18rem;
   border: none;
-  border-radius: 12px;
+  border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -156,11 +156,28 @@ body {
   padding: 8px 20px;
   font-weight: 700;
   background-color: #dab214;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card .btn-primary:hover {
   background-color: #dab214cb;
+}
+
+.card .btn-primary:active {
+  background-image: none;
+  background-color: #b8960f;
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.card .btn-primary:focus,
+.card .btn-primary:active:focus {
+  box-shadow: 0 0 0 3px rgba(218, 178, 20, 0.4);
+  outline: none;
+}
+
+main {
+  padding: 40px 24px;
 }
 
 main {

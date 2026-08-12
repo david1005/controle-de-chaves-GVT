@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retirada de Chave</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../static/css/retirada.css">
+    <link rel="icon" type="image/x-icon" href="../static/images/icon-cadastro.png" />
+</head>
+<body>
+    <div class="d-flex align-items-center justify-content-center min-vh-100 py-4 px-3">
+
+        <button type="button" class="btn btn-voltar" onclick="window.history.back()">
+            <i class="fa-solid fa-arrow-left"></i> Voltar
+        </button>
+
+        <div class="card shadow-lg border-0 form-card">
+            <div class="card-body p-4 p-md-5">
+
+                <h2 class="fw-bold mb-1">Retirada de Chave</h2>
+                <p class="text-muted mb-2">Registrar empréstimo de chave para retirada</p>
+                <div class="barra-horizontal mb-4"></div>
+
+                <form id="form-retirada" novalidate>
+
+                    
+                    <div class="form-floating mb-2">
+                        <select class="form-select" id="chave" name="chave" required>
+                            <option value="" selected disabled>Selecione a chave</option>
+                            <option 
+                            value="{{ chave.id }}" 
+                            data-local="{{ chave.local }}" 
+                            data-status="{{ chave.status }}"
+                            {% if chave.status == "inativa" %}disabled{% endif %}>
+                            Chave {{ Chave.codigo }} — {{ Chave.local }}
+                            {% if chave.status == "inativa" %} (Indisponível){% endif %}
+                            </option>
+                        </select>
+                        <label for="chave">Chave Cadastrada</label>
+                    </div>
+
+                    
+                    <div id="resumo-chave" class="resumo-selecao mb-4 d-none">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span id="resumo-local">—</span>
+                        </div>
+                        <span id="resumo-status" class="badge-chave">—</span>
+                    </div>
+
+                    
+                    <div class="d-flex align-items-center gap-3 mb-2">
+                        <div class="preview-foto flex-shrink-0" id="preview-foto-pessoa">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div class="form-floating flex-grow-1">
+                            <select class="form-select" id="pessoa" name="pessoa" required>
+                                <option value="" selected disabled>Selecione a pessoa</option>
+                                {% for Pessoa in pessoas %}
+                                <option 
+                                    value="{{ pessoa.id }}" 
+                                    data-cargo="{{ pessoa.cargo }}" 
+                                    data-foto="{% if pessoa.foto %}{{ pessoa.foto.url }}{% endif %}">
+                                    {{ Pessoa.nome }} — {{ Pessoa.cargo }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <label for="pessoa">Pessoa (quem vai retirar)</label>
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-4" id="resumo-cargo"></p>
+
+                    
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <div class="form-floating">
+                                <input type="time" class="form-control" id="horario" name="horario" step="900" required>
+                                <label for="horario">Horário da Retirada</label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-floating">
+                                <input type="date" class="form-control campo-data-auto" id="data" name="data" readonly required>
+                                <label for="data">Data</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="form-floating mb-4">
+                        <textarea class="form-control" id="observacoes" name="observacoes"
+                                  placeholder="Observações" style="height: 90px;"></textarea>
+                        <label for="observacoes">Observações</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold text-uppercase btn-salvar">
+                        <i class="fa-solid fa-key me-2"></i>Confirmar Retirada
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../static/js/retirada.js"></script>
+</body>
+</html>

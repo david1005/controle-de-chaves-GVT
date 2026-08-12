@@ -1,72 +1,155 @@
+:root {
+  --cor-marca: #dab214;
+  --cor-marca-escura: #b8960f;
+  --cor-navy: #07092c;
+  --cor-navy-clara: #12153f;
+  --cor-texto: #252424;
+  --cor-texto-suave: #666;
+}
+
 * {
   margin: 0;
   padding: 0;
-  box-sizing: content-box;
+  box-sizing: border-box;
 }
 
-body{
-  font-family: "Montserrat";
-  color: #252424;
+body {
+  font-family: "Montserrat", sans-serif;
+  color: var(--cor-texto);
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   justify-content: center;
   align-items: center;
-  background-color: rgb(7, 9, 36);
-  background-size: cover;
+  background-color: var(--cor-navy);
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(218, 178, 20, 0.12), transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(218, 178, 20, 0.08), transparent 45%),
+    linear-gradient(160deg, var(--cor-navy) 0%, var(--cor-navy-clara) 100%);
+  background-attachment: fixed;
+  margin: 0;
+  padding: 20px;
 }
 
 form {
-  background-color: white;
-  padding: 75px;
-  border-radius: 25px;
+  background-color: #fff;
+  padding: 60px 65px;
+  border-radius: 24px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 22px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
+  animation: fadeInForm 0.5s ease;
+}
+
+@keyframes fadeInForm {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .barra-horizontal {
-  background-color:  #dab214;
+  background: linear-gradient(90deg, var(--cor-marca), var(--cor-marca-escura));
   height: 4px;
-  width: 215px;
-}
-
-.lembrar-me{
-  display: flex;
-  gap: 5px;
-}
-
-.campo-input {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+  width: 60px;
+  border-radius: 4px;
+  align-self: center;
 }
 
 .titulo {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 8px;
+  align-items: center;
+  text-align: center;
 }
 
-a {
-  padding: 10px;
-  align-self: center;
-  text-align: center;
-  width: 160px;
-  border-radius: 30px;
-  background-image: linear-gradient( #dab214,  #dab214d0);
-  border: solid 1px  #dab214;
-  border-right-width: 4px;
-  border-bottom-width: 4px;
-  font-size: 16px;
-  color: white;
-  text-transform: uppercase;
+.titulo h1 {
+  font-size: 1.7rem;
   font-weight: 700;
-  text-decoration: none;
+  color: var(--cor-navy);
+  letter-spacing: -0.3px;
+}
+
+.titulo p {
+  font-size: 0.9rem;
+  color: var(--cor-texto-suave);
+}
+
+.campo-input {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campo-input label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #444;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
 }
 
 input {
-  padding: 10px 20px;
-  border-radius: 10px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 2px solid #e9e6e6;
+  background-color: #faf9f8;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--cor-texto);
+  transition: border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+input:hover {
+  border-color: #ddd;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--cor-marca);
+  background-color: #fff;
+  box-shadow: 0 0 0 4px rgba(218, 178, 20, 0.18);
+}
+
+input::placeholder {
+  color: #aaa;
+}
+
+.lembrar-me {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+}
+
+.lembrar-me input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--cor-marca);
+  cursor: pointer;
+  padding: 0;
+}
+
+
+a {
+  padding: 13px;
+  align-self: center;
+  text-align: center;
+  width: 100%;
+  border-radius: 30px;
+  background: linear-gradient(180deg, var(--cor-marca), var(--cor-marca-escura));
   border: none;
-  background-color: #ddd7d7;
+  font-size: 15px;
+  color: #fff;
+  text-transform: uppercase;
 }
