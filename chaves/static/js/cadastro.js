@@ -33,12 +33,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
   
   const form = document.getElementById('form-cadastro');
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-
+  form.addEventListener('submit', function () {
     const tipo = tipoInput.value;
-    
-    alert(`Formulário de "${tipo}" pronto para envio.`);
+    form.action = tipo === 'pessoa'
+      ? form.dataset.urlPessoa
+      : form.dataset.urlChave;
     
   });
 

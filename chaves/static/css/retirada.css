@@ -9,15 +9,134 @@ body {
   background-color: var(--cor-navy);
 }
 
+.barra-horizontal {
+  background-color: var(--cor-marca);
+  height: 4px;
+  width: 290px;
+}
+
+.navbar-custom {
+  background-color: rgb(7, 9, 44);
+}
+
+.navbar-custom .navbar-brand {
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.navbar-custom .navbar-brand:hover {
+  color: #fff;
+  background-color: transparent;
+}
+
+.navbar-custom .nav-link {
+  color: rgba(255, 255, 255, 0.9);
+  padding: 8px 16px;
+  margin: 0 4px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.navbar-custom .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.navbar-custom .navbar-toggler {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.navbar-custom .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.navbar-custom .dropdown-toggle {
+  color: #fff;
+  border-radius: 8px;
+  padding: 6px 12px;
+  transition: background-color 0.2s ease;
+}
+
+.navbar-custom .dropdown-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.navbar-custom .dropdown-toggle::after {
+  border-top-color: #fff;
+}
+
+.dropdown-menu {
+  border: none;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+}
+
+.dropdown-item:hover {
+  background-color: #f4f0fd;
+  color: rgb(7, 9, 44);
+}
+
+@media (max-width: 767.98px) {
+  .navbar-custom .dropdown-menu {
+    position: static;
+    float: none;
+    width: 100%;
+    margin-top: 4px;
+    background-color: rgba(255, 255, 255, 0.08);
+    box-shadow: none;
+  }
+
+  .navbar-custom .dropdown-item {
+    color: #fff;
+  }
+
+  .navbar-custom .dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+  }
+
+  .navbar-custom .dropdown-toggle {
+    justify-content: center;
+  }
+}
+
+.btn-salvar {
+  background-color: var(--cor-marca);
+  border: none;
+  border-radius: 30px;
+  letter-spacing: 0.5px;
+  transition: transform 0.25s ease, box-shadow 0.55s ease;
+}
+
+.btn-salvar:hover {
+  background-color: var(--cor-marca);
+  filter: brightness(1.05);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.btn-salvar:active {
+  background-color: var(--cor-marca-escura) !important;
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.btn-salvar:focus {
+  box-shadow: 0 0 0 0.25rem rgba(218, 178, 20, 0.4);
+}
+
+
 .btn-voltar {
-  position: fixed;
-  top: 24px;
+  position: absolute;
+  top: 90px;
   left: 24px;
   background-color: transparent;
   border: 2px solid #fff;
   color: #fff;
   border-radius: 30px;
-  font-weight: 600;
+  font-weight: 1000;
   letter-spacing: 0.5px;
   padding: 8px 20px;
   z-index: 10;
@@ -123,4 +242,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   height: 100%;
   object-fit: cover;
   animation: fadeInForm 0.25s ease;
+}
+
+.form-card {
+  width: 90%;
+  max-width: 560px;
+  border-radius: 20px;
+  animation: fadeInForm 0.5s ease;
+}
+
+@keyframes fadeInForm {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }

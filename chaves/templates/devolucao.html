@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Principal</title>
-    <link rel="stylesheet" href="../static/css/index.css" />
-    <link rel="icon" type="image/x-icon" href="../static/images/icon-home.png" />
+    <title>Devolução de Chave</title>
+    <link rel="stylesheet" href="../static/css/devolucao.css" />
+    <link rel="icon" type="image/x-icon" href="../static/images/icon-cadastro.png" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -69,59 +69,45 @@
     </div>
     </nav>
 
-    <div class="card-wrapper">
-        <div class="card">
-            <div class="card-icon">
-            <i class="fa-solid fa-user-plus"></i>
+    <div class="d-flex align-items-center justify-content-center min-vh-100 py-4 px-3">
+    <button type="button" class="btn btn-voltar" onclick="window.history.back()">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+    </button>
+    <div class="card shadow-lg border-0 form-card">
+        <div class="card-body p-4 p-md-5">
+
+        <h2 class="fw-bold mb-1">Devolução de Chave</h2>
+        <div class="barra-horizontal mb-4"></div>
+
+        {% if erro %}
+        <div class="alert alert-danger">{{ erro }}</div>
+        {% endif %}
+
+        {% if movimentacoes %}
+        <form method="post" action="{% url 'registrar_devolucao' %}">
+            {% csrf_token %}
+            <div class="form-floating mb-4">
+                <select class="form-select" id="chave" name="chave" required>
+                    <option value="" selected disabled>Selecione a chave a devolver</option>
+                    {% for mov in movimentacoes %}
+                    <option value="{{ mov.chave.id }}">
+                        Chave {{ mov.chave.codigo }} — com {{ mov.pessoa.nome }} desde {{ mov.data_hora_retirada|date:"d/m/Y H:i" }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <label for="chave">Chave em aberto</label>
             </div>
-            <div class="card-body">
-            <h5 class="card-title">Cadastro</h5>
-            <p class="card-text">Cadastre novas chaves ou pessoas autorizadas a realizar movimentações no sistema.</p>
-            <a href="cadastro.html" class="btn btn-primary">Acessar</a>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-icon">
-            <i class="fa-solid fa-list-check"></i>
-            </div>
-            <div class="card-body">
-            <h5 class="card-title">Lista de Chaves</h5>
-            <p class="card-text">Visualize as chaves cadastradas, seu status atual e quem está com cada uma no momento.</p>
-            <a href="lista.html" class="btn btn-primary">Acessar</a>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-icon">
-            <i class="fa-solid fa-key"></i>
-            </div>
-            <div class="card-body">
-            <h5 class="card-title">Retirada de Chaves</h5>
-            <p class="card-text">Registre a retirada de chaves de forma rápida e organizada.</p>
-            <a href="retirada.html" class="btn btn-primary">Acessar</a>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-icon">
-            <i class="fa-solid fa-rotate-left"></i>
-            </div>
-            <div class="card-body">
-            <h5 class="card-title">Devolução de Chaves</h5>
-            <p class="card-text">Confirme a devolução das chaves ao setor responsável.</p>
-            <a href="devolucao.html" class="btn btn-primary">Acessar</a>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-icon">
-            <i class="fa-solid fa-file-lines"></i>
-            </div>
-            <div class="card-body">
-            <h5 class="card-title">Relatórios</h5>
-            <p class="card-text">Visualize relatórios completos de movimentações.</p>
-            <a href="relatorios.html" class="btn btn-primary">Acessar</a>
-            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold text-uppercase btn-salvar">
+                <i class="fa-solid fa-rotate-left me-2"></i>Confirmar Devolução
+            </button>
+        </form>
+        {% else %}
+        <p class="text-muted">Não há chaves em aberto no momento.</p>
+        {% endif %}
+
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    </div>
 </body>
 </html>

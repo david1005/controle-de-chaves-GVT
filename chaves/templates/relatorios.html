@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios | Histórico</title>
+    <link rel="stylesheet" href="../static/css/relatorio.css" />
+    <link rel="icon" type="image/x-icon" href="../static/images/icon-cadastro.png" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-custom px-3">
+    <div class="container-fluid">
+        <a class="navbar-brand">Controle de Chaves</a>
+        <button class="navbar-toggler" type="button"
+        data-bs-toggle="collapse" data-bs-target="#menuNav"
+        aria-controls="menuNav" aria-expanded="false" aria-label="Abrir menu">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="menuNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                <a class="nav-link" href="index.html">
+                    <i class="fa-solid fa-house me-1"></i> Início
+                </a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="retirada.html">
+                    <i class="fa-solid fa-key me-1"></i> Retirada
+                </a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="devolucao.html">
+                    <i class="fa-solid fa-rotate-left me-1"></i> Devolução
+                </a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="cadastro.html">
+                    <i class="fa-solid fa-user-plus me-1"></i> Cadastro
+                </a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="relatorios.html">
+                    <i class="fa-solid fa-file-lines me-1"></i> Relatórios
+                </a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="lista.html">
+                    <i class="fa-solid fa-list-check"></i> Chaves
+                </a>
+                </li>
+            </ul>
+
+        <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+            <i class="fa-solid fa-circle-user me-2" style="font-size: 1.4rem;"></i>
+            <span>João Silva</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item text-danger" href="login.html"><i class="fa-solid fa-right-from-bracket me-2"></i>Sair</a></li>
+            </ul>
+        </li>
+        </ul>
+        </div>
+
+    </div>
+    </nav>
+
+<div class="container py-4">
+    <h2 class="fw-bold mb-4">Relatório de Movimentações</h2>
+
+    <form method="get" action="{% url 'relatorio' %}" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <label for="chave" class="form-label">Chave</label>
+            <select class="form-select" id="chave" name="chave">
+                <option value="">Todas</option>
+                {% for c in chaves %}
+                <option value="{{ c.id }}" {% if request.GET.chave == c.id|stringformat:"s" %}selected{% endif %}>{{ c.codigo }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="pessoa" class="form-label">Pessoa</label>
+            <select class="form-select" id="pessoa" name="pessoa">
+                <option value="">Todas</option>
+                {% for p in pessoas %}
+                <option value="{{ p.id }}" {% if request.GET.pessoa == p.id|stringformat:"s" %}selected{% endif %}>{{ p.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="data_inicio" class="form-label">De</label>
+            <input type="date" class="form-control" id="data_inicio" name="data_inicio" value="{{ request.GET.data_inicio }}">
+        </div>
+        <div class="col-md-2">
+            <label for="data_fim" class="form-label">Até</label>
+            <input type="date" class="form-control" id="data_fim" name="data_fim" value="{{ request.GET.data_fim }}">
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr>
+                <th>Chave</th>
+                <th>Pessoa</th>
+                <th>Operador</th>
+                <th>Retirada</th>
+                <th>Devolução</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mov in movimentacoes %}
+            <tr>
+                <td>{{ mov.chave.codigo }}</td>
+                <td>{{ mov.pessoa.nome }}</td>
+                <td>{{ mov.operador.nome|default:"—" }}</td>
+                <td>{{ mov.data_hora_retirada|date:"d/m/Y H:i" }}</td>
+                <td>
+                    {% if mov.data_hora_devolucao %}
+                        {{ mov.data_hora_devolucao|date:"d/m/Y H:i" }}
+                    {% else %}
+                        <span class="badge bg-warning text-dark">Em aberto</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-muted">Nenhuma movimentação encontrada.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+{% endblock %}{% extends "base.html" %}
+{% block title %}Relatórios{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="fw-bold mb-4">Relatório de Movimentações</h2>
+
+    <form method="get" action="{% url 'relatorio' %}" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <label for="chave" class="form-label">Chave</label>
+            <select class="form-select" id="chave" name="chave">
+                <option value="">Todas</option>
+                {% for c in chaves %}
+                <option value="{{ c.id }}" {% if request.GET.chave == c.id|stringformat:"s" %}selected{% endif %}>{{ c.codigo }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="pessoa" class="form-label">Pessoa</label>
+            <select class="form-select" id="pessoa" name="pessoa">
+                <option value="">Todas</option>
+                {% for p in pessoas %}
+                <option value="{{ p.id }}" {% if request.GET.pessoa == p.id|stringformat:"s" %}selected{% endif %}>{{ p.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="data_inicio" class="form-label">De</label>
+            <input type="date" class="form-control" id="data_inicio" name="data_inicio" value="{{ request.GET.data_inicio }}">
+        </div>
+        <div class="col-md-2">
+            <label for="data_fim" class="form-label">Até</label>
+            <input type="date" class="form-control" id="data_fim" name="data_fim" value="{{ request.GET.data_fim }}">
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr>
+                <th>Chave</th>
+                <th>Pessoa</th>
+                <th>Operador</th>
+                <th>Retirada</th>
+                <th>Devolução</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mov in movimentacoes %}
+            <tr>
+                <td>{{ mov.chave.codigo }}</td>
+                <td>{{ mov.pessoa.nome }}</td>
+                <td>{{ mov.operador.nome|default:"—" }}</td>
+                <td>{{ mov.data_hora_retirada|date:"d/m/Y H:i" }}</td>
+                <td>
+                    {% if mov.data_hora_devolucao %}
+                        {{ mov.data_hora_devolucao|date:"d/m/Y H:i" }}
+                    {% else %}
+                        <span class="badge bg-warning text-dark">Em aberto</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-muted">Nenhuma movimentação encontrada.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+</body>
+</html>

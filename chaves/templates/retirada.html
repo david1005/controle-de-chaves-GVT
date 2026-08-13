@@ -1,15 +1,74 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Retirada de Chave</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/retirada.css" />
+    <link rel="icon" type="image/x-icon" href="../static/images/icon-home.png" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="../static/css/retirada.css">
-    <link rel="icon" type="image/x-icon" href="../static/images/icon-cadastro.png" />
 </head>
 <body>
+    <nav class="navbar navbar-expand-md navbar-custom px-3">
+    <div class="container-fluid">
+        <a class="navbar-brand">Controle de Chaves</a>
+        <button class="navbar-toggler" type="button"
+        data-bs-toggle="collapse" data-bs-target="#menuNav"
+        aria-controls="menuNav" aria-expanded="false" aria-label="Abrir menu">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="menuNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                <a class="nav-link" href="index.html">
+                    <i class="fa-solid fa-house me-1"></i> Início
+                </a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="retirada.html">
+                    <i class="fa-solid fa-key me-1"></i> Retirada
+                </a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="devolucao.html">
+                    <i class="fa-solid fa-rotate-left me-1"></i> Devolução
+                </a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="cadastro.html">
+                    <i class="fa-solid fa-user-plus me-1"></i> Cadastro
+                </a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="relatorios.html">
+                    <i class="fa-solid fa-file-lines me-1"></i> Relatórios
+                </a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="lista.html">
+                    <i class="fa-solid fa-list-check"></i> Chaves
+                </a>
+                </li>
+            </ul>
+
+        <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+            <i class="fa-solid fa-circle-user me-2" style="font-size: 1.4rem;"></i>
+            <span>João Silva</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item text-danger" href="login.html"><i class="fa-solid fa-right-from-bracket me-2"></i>Sair</a></li>
+            </ul>
+        </li>
+        </ul>
+        </div>
+
+    </div>
+    </nav>
+
     <div class="d-flex align-items-center justify-content-center min-vh-100 py-4 px-3">
 
         <button type="button" class="btn btn-voltar" onclick="window.history.back()">
@@ -20,28 +79,31 @@
             <div class="card-body p-4 p-md-5">
 
                 <h2 class="fw-bold mb-1">Retirada de Chave</h2>
-                <p class="text-muted mb-2">Registrar empréstimo de chave para retirada</p>
                 <div class="barra-horizontal mb-4"></div>
 
-                <form id="form-retirada" novalidate>
+                {% if erro %}
+                <div class="alert alert-danger">{{ erro }}</div>
+                {% endif %}
 
-                    
+                <form id="form-retirada" method="post" action="{% url 'retirada' %}" novalidate>
+                    {% csrf_token %}
+
                     <div class="form-floating mb-2">
                         <select class="form-select" id="chave" name="chave" required>
                             <option value="" selected disabled>Selecione a chave</option>
-                            <option 
-                            value="{{ chave.id }}" 
-                            data-local="{{ chave.local }}" 
-                            data-status="{{ chave.status }}"
-                            {% if chave.status == "inativa" %}disabled{% endif %}>
-                            Chave {{ Chave.codigo }} — {{ Chave.local }}
-                            {% if chave.status == "inativa" %} (Indisponível){% endif %}
+                            {% for chave in chaves %}
+                            <option
+                            value="{{ chave.id }}"
+                            data-local="{{ chave.local }}"
+                            data-status="{% if chave.esta_disponivel %}ativa{% else %}indisponivel{% endif %}">
+                            Chave {{ chave.codigo }} — {{ chave.local }}
+                            {% if not chave.esta_disponivel %} (Indisponível){% endif %}
                             </option>
+                            {% endfor %}
                         </select>
                         <label for="chave">Chave Cadastrada</label>
                     </div>
 
-                    
                     <div id="resumo-chave" class="resumo-selecao mb-4 d-none">
                         <div class="d-flex align-items-center gap-2">
                             <i class="fa-solid fa-location-dot"></i>
@@ -50,7 +112,6 @@
                         <span id="resumo-status" class="badge-chave">—</span>
                     </div>
 
-                    
                     <div class="d-flex align-items-center gap-3 mb-2">
                         <div class="preview-foto flex-shrink-0" id="preview-foto-pessoa">
                             <i class="fa-solid fa-user"></i>
@@ -58,12 +119,12 @@
                         <div class="form-floating flex-grow-1">
                             <select class="form-select" id="pessoa" name="pessoa" required>
                                 <option value="" selected disabled>Selecione a pessoa</option>
-                                {% for Pessoa in pessoas %}
-                                <option 
-                                    value="{{ pessoa.id }}" 
-                                    data-cargo="{{ pessoa.cargo }}" 
+                                {% for pessoa in pessoas %}
+                                <option
+                                    value="{{ pessoa.id }}"
+                                    data-cargo="{{ pessoa.cargo }}"
                                     data-foto="{% if pessoa.foto %}{{ pessoa.foto.url }}{% endif %}">
-                                    {{ Pessoa.nome }} — {{ Pessoa.cargo }}
+                                    {{ pessoa.nome }} — {{ pessoa.cargo }}
                                 </option>
                                 {% endfor %}
                             </select>
@@ -72,7 +133,6 @@
                     </div>
                     <p class="text-muted small mb-4" id="resumo-cargo"></p>
 
-                    
                     <div class="row g-3 mb-3">
                         <div class="col-6">
                             <div class="form-floating">
@@ -88,7 +148,6 @@
                         </div>
                     </div>
 
-                    
                     <div class="form-floating mb-4">
                         <textarea class="form-control" id="observacoes" name="observacoes"
                                   placeholder="Observações" style="height: 90px;"></textarea>
@@ -104,8 +163,6 @@
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../static/js/retirada.js"></script>
 </body>
 </html>

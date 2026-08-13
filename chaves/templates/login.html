@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,24 +8,30 @@
     <link rel="icon" type="image/x-icon" href="../static/images/icon-login.png" />
   </head>
   <body>
-    <form action="">
+    <form action="{% url 'login' %}" method="post">
+      {% csrf_token %}
       <div class="titulo">
         <h1>Faça o seu login</h1>
         <div class="barra-horizontal"></div>
       </div>
+
+      {% if erro %}
+      <p class="erro-login" style="color:#c0392b; margin-bottom: 1rem;">{{ erro }}</p>
+      {% endif %}
+
       <div class="campo-input">
         <label for="email">E-mail</label>
-        <input type="email" id="email" />
+        <input type="email" id="email" name="email" required />
       </div>
       <div class="campo-input">
         <label for="password">Senha</label>
-        <input type="password" id="password" />
+        <input type="password" id="password" name="password" required />
       </div>
       <div class="lembrar-me">
         <input type="checkbox" />
         <p>Lembrar-me</p>
       </div>
-      <a id="button" href="index.html">Entrar</a>
+      <button id="button" type="submit">Entrar</button>
     </form>
   </body>
 </html>
