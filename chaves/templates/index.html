@@ -22,32 +22,32 @@
         <div class="collapse navbar-collapse" id="menuNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href= "{%  url 'inicio'  %}">
                     <i class="fa-solid fa-house me-1"></i> Início
                 </a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="retirada.html">
+                <a class="nav-link" href= "{% url 'retirada' %}">
                     <i class="fa-solid fa-key me-1"></i> Retirada
                 </a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="devolucao.html">
+                <a class="nav-link" href= "{% url 'registrar_devolucao' %}">
                     <i class="fa-solid fa-rotate-left me-1"></i> Devolução
                 </a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="cadastro.html">
+                <a class="nav-link" href= "{% url 'cadastrar_chave' %}">
                     <i class="fa-solid fa-user-plus me-1"></i> Cadastro
                 </a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="relatorios.html">
+                <a class="nav-link" href= "{% url 'relatorio' %}">
                     <i class="fa-solid fa-file-lines me-1"></i> Relatórios
                 </a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="lista.html">
+                <a class="nav-link" href= "{% url 'lista_chaves' %}">
                     <i class="fa-solid fa-list-check"></i> Chaves
                 </a>
                 </li>
@@ -60,7 +60,7 @@
             <span>João Silva</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item text-danger" href="login.html"><i class="fa-solid fa-right-from-bracket me-2"></i>Sair</a></li>
+            <li><a class="dropdown-item text-danger" href="{% url 'inicio' %}"><i class="fa-solid fa-right-from-bracket me-2"></i>Sair</a></li>
             </ul>
         </li>
         </ul>
@@ -77,7 +77,7 @@
             <div class="card-body">
             <h5 class="card-title">Cadastro</h5>
             <p class="card-text">Cadastre novas chaves ou pessoas autorizadas a realizar movimentações no sistema.</p>
-            <a href="cadastro.html" class="btn btn-primary">Acessar</a>
+            <a href="{% url 'cadastrar_chave' %}" class="btn btn-primary">Acessar</a>
             </div>
         </div>
         <div class="card">
@@ -87,7 +87,7 @@
             <div class="card-body">
             <h5 class="card-title">Lista de Chaves</h5>
             <p class="card-text">Visualize as chaves cadastradas, seu status atual e quem está com cada uma no momento.</p>
-            <a href="lista.html" class="btn btn-primary">Acessar</a>
+            <a href="{% url 'lista_chaves' %}" class="btn btn-primary">Acessar</a>
             </div>
         </div>
         <div class="card">
@@ -97,7 +97,7 @@
             <div class="card-body">
             <h5 class="card-title">Retirada de Chaves</h5>
             <p class="card-text">Registre a retirada de chaves de forma rápida e organizada.</p>
-            <a href="retirada.html" class="btn btn-primary">Acessar</a>
+            <a href="{% url 'retirada' %}" class="btn btn-primary">Acessar</a>
             </div>
         </div>
         <div class="card">
@@ -107,7 +107,7 @@
             <div class="card-body">
             <h5 class="card-title">Devolução de Chaves</h5>
             <p class="card-text">Confirme a devolução das chaves ao setor responsável.</p>
-            <a href="devolucao.html" class="btn btn-primary">Acessar</a>
+            <a href="{% url 'registrar_devolucao' %}" class="btn btn-primary">Acessar</a>
             </div>
         </div>
         <div class="card">
@@ -117,7 +117,7 @@
             <div class="card-body">
             <h5 class="card-title">Relatórios</h5>
             <p class="card-text">Visualize relatórios completos de movimentações.</p>
-            <a href="relatorios.html" class="btn btn-primary">Acessar</a>
+            <a href="{% url 'relatorio' %}" class="btn btn-primary">Acessar</a>
             </div>
         </div>
     </div>

@@ -29,7 +29,7 @@ urlpatterns = [
     path('', views.inicio, name='inicio'),
 
     # Movimentações
-    path('retirada/', views.retirada, name='retirada'),
+    path('retirada/', views.registrar_retirada, name='retirada'),
     path('devolucao/', views.registrar_devolucao, name='registrar_devolucao'),
 
     # Chaves — listagem/painel
