@@ -12,20 +12,13 @@ def login_view(request):
         email = request.POST.get("email")
         password = request.POST.get("password")
 
-        usuario = authenticate(
-            request,
-            email=email,
-            password=password
-        )
+        usuario = authenticate(request, email=email, password=password)
 
         if usuario is not None:
             login(request, usuario)
             return redirect("inicio")
 
-        return render(request, "login.html", {
-            "erro": "E-mail ou senha incorretos."
-        })
-
+        return render(request, "login.html", {"erro": "E-mail ou senha incorretos."})
 
     return render(request, "login.html")
 
@@ -44,7 +37,12 @@ def inicio(request):
 
 @login_required
 def registrar_retirada(request):
-    if request.method == "POST":
+    contexto_base = {
+        "chaves": Chave.objects.filter(ativa=True),
+        "pessoas": Pessoa.objects.all(),
+    }
+
+    if request.method == "POST":     
         
         chave_id = request.POST.get("chave")
         pessoa_id = request.POST.get("pessoa")
@@ -52,54 +50,40 @@ def registrar_retirada(request):
         try:
             chave = Chave.objects.get(id=chave_id)
         except Chave.DoesNotExist:
-            return render(request, "index.html", {
-                "erro": "Chave não encontrada."
-            })
+            return render(request, "retirada.html", {**contexto_base,"erro": "Chave não encontrada."})
 
         try:
             pessoa = Pessoa.objects.get(id=pessoa_id)
         except Pessoa.DoesNotExist:
-            return render(request, "index.html", {
-                "erro": "Pessoa não encontrada."
-            })
+            return render(request, "retirada.html", {**contexto_base,"erro": "Pessoa não encontrada."})
 
         if not chave.ativa:
-            return render(request, "index.html", {
-                "erro": "Essa chave está inativa."
-            })
+            return render(request, "retirada.html", {**contexto_base, "erro": "Essa chave está inativa."})
 
         if not chave.esta_disponivel():
-            return render(request, "index.html", {
-                "erro": "Essa chave já foi retirada e não foi devolvida."
-            })
+            return render(request, "retirada.html", {**contexto_base, "erro": "Essa chave já foi retirada e não foi devolvida."})
 
-        movimentacao = Movimentacao(
-            chave=chave,
-            pessoa=pessoa,
-            operador=request.user
-        )
-
-        movimentacao.save()
+        Movimentacao.objects.create(chave=chave, pessoa=pessoa, operador=request.user)
 
         return redirect("inicio")
 
-    return redirect("inicio")
+    return render(request, "retirada.html", contexto_base)
 
 
 # Devolução
 
 @login_required
 def registrar_devolucao(request):
+    movimentacoes_abertas = Movimentacao.objects.filter(data_hora_devolucao__isnull=True)
+
     if request.method == "POST":
         chave_id = request.POST.get("chave")
 
-        movimentacao = Movimentacao.objects.filter(
-            chave_id=chave_id,
-            data_hora_devolucao__isnull=True
-        ).first()
+        movimentacao = movimentacoes_abertas.filter(chave_id=chave_id).first()
 
         if movimentacao is None:
-            return render(request, "index.html", {
+            return render(request, "devolucao.html", {
+                "movimentacoes": movimentacoes_abertas,
                 "erro": "Essa chave não possui uma retirada em aberto."
             })
 
@@ -108,20 +92,15 @@ def registrar_devolucao(request):
 
         return redirect("inicio")
 
-    return redirect("inicio")
+    return render(request, "devolucao.html", {"movimentacoes": movimentacoes_abertas})
 
 
 # Chaves abertas
 
 @login_required
-def chaves_abertas(request):
-    movimentacoes = Movimentacao.objects.filter(
-        data_hora_devolucao__isnull=True
-    )
+def lista_chaves(request):
+    return render(request, "lista.html", {"chaves": Chave.objects.all()})
 
-    return render(request, "index.html", {
-        "movimentacoes": movimentacoes
-    })
 
 # Chaves
 
@@ -136,22 +115,21 @@ def cadastrar_chave(request):
         observacoes = request.POST.get("observacoes")
 
         if not codigo or not codigo.strip():
-            return render(request, "cadastro_chave.html", {
+            return render(request, "cadastro.html", {
                 "erro": "O código da chave é obrigatório!"
             })
 
         if not local or not local.strip():
-            return render(request, "cadastro_chave.html", {
+            return render(request, "cadastro.html", {
                 "erro": "O local é obrigatório!"
             })
 
 
-        chave = Chave(codigo=codigo, local=local, observacoes=observacoes)
-        chave.save()
+        Chave.objects.create(codigo=codigo.strip(), local=local.strip(), observacoes=observacoes)
 
         return redirect("inicio")
     
-    return render(request, "cadastro_chave.html")
+    return render(request, "cadastro.html")
 
 @login_required
 def editar_chave(request, chave_id):
@@ -167,7 +145,6 @@ def editar_chave(request, chave_id):
         chave.codigo = request.POST.get("codigo")
         chave.local = request.POST.get("local")
         chave.observacoes = request.POST.get("observacoes")
-
         chave.save()
 
         return redirect("inicio")
@@ -203,31 +180,19 @@ def cadastrar_pessoa(request):
         foto = request.FILES.get("foto")
 
         if not nome or not nome.strip():
-            return render(request, "Cadastro_pessoa.html", {
-                "erro": "O nome da pessoa é obrigatório!"
-        })
+            return render(request, "cadastro.html", {"erro": "O nome da pessoa é obrigatório!"})
 
         if not matricula or not matricula.strip():
-            return render(request, "Cadastro_pessoa.html", {
-                "erro": "A matrícula é obrigatória!"
-        })
+            return render(request, "cadastro.html", {"erro": "A matrícula é obrigatória!"})
 
         if not cargo or not cargo.strip():
-            return render(request, "Cadastro_pessoa.html", {
-                "erro": "O cargo é obrigatório!"
-        })
+            return render(request, "cadastro.html", {"erro": "O cargo é obrigatório!"})
 
-        pessoa = Pessoa(
-                nome=nome.strip(),
-                matricula=matricula.strip(),
-                cargo=cargo.strip(),
-                foto=foto
-            )
-
-        pessoa.save()
+        Pessoa.objects.create(nome=nome.strip(), matricula=matricula.strip(), cargo=cargo.strip(), foto=foto)
 
         return redirect("inicio")
-    return render(request, "Cadastro_pessoa.html")
+
+    return render(request, "cadastro.html")
 
 
 @login_required
@@ -247,19 +212,13 @@ def editar_pessoa(request, pessoa_id):
         foto = request.FILES.get("foto")
 
         if not nome or not nome.strip():
-            return render(request, "Editar_pessoa.html", {
-                "erro": "O nome da pessoa é obrigatório!"
-            })
+            return render(request, "editar_pessoa.html", {"pessoa": pessoa, "erro": "O nome da pessoa é obrigatório!"})
 
         if not matricula or not matricula.strip():
-            return render(request, "Editar_pessoa.html", {
-                "erro": "A matrícula é obrigatória!"
-            })
+            return render(request, "editar_pessoa.html", {"pessoa": pessoa, "erro": "A matrícula é obrigatória!"})
 
         if not cargo or not cargo.strip():
-            return render(request, "Editar_pessoa.html", {
-                "erro": "O cargo é obrigatório!"
-            })
+            return render(request, "editar_pessoa.html", {"pessoa": pessoa, "erro": "O cargo é obrigatório!"})
 
         pessoa.nome = nome.strip()
         pessoa.matricula = matricula.strip()
@@ -272,57 +231,53 @@ def editar_pessoa(request, pessoa_id):
 
         return redirect("inicio")
 
-    return render(request, "Editar_pessoa.html", {
-        "pessoa": pessoa
-    })
+    return render(request, "editar_pessoa.html", {"pessoa": pessoa})
         
 
-# Operadores
+# Usuários
 
 @login_required
-def cadastrar_operador(request):
+def cadastrar_usuario(request):
     if not request.user.is_administrador():
         return redirect("inicio")
+
+    contexto_base = {"usuários": Usuario.objects.all()}
 
     if request.method == "POST":
         nome = request.POST.get("nome")
         email = request.POST.get("email")
         password = request.POST.get("password")
+        eh_administrador = request.POST.get("is_staff") == "on"
         tipo = request.POST.get("tipo")
 
         if not nome or not nome.strip():
-            return render(request, "Cadastro_operador.html", {
-                "erro": "O nome do operador é obrigatório!"
-            })
+            return render(request, "cadastro.html", {**contexto_base, "erro": "O nome do operador é obrigatório!"})
 
         if not email or not email.strip():
-            return render(request, "Cadastro_usuario.html", {
-                "erro": "O e-mail é obrigatório!"
-            })
+            return render(request, "cadastro.html", {**contexto_base, "erro": "O e-mail é obrigatório!"})
 
         if not password:
-            return render(request, "Cadastro_usuario.html", {
-                "erro": "A senha é obrigatória!"
-            })
+            return render(request, "cadastro.html", {**contexto_base, "erro": "A senha é obrigatória!"})
 
         if tipo not in ("operador", "administrador"):
             tipo = "operador"
 
         if Usuario.objects.filter(email=email.strip()).exists():
-            return render(request, "Cadastro_usuario.html", {
-                "erro": "Já existe um usuário com esse e-mail."
+            return render(request, "usuarios.html", {
+                **contexto_base, "erro": "Já existe um usuário com esse e-mail."
             })
 
-        Usuario.objects.create_user(
-            email=email.strip(),
-            nome=nome.strip(),
-            password=password,
-            tipo=tipo
+        novo_usuario = Usuario.objects.create_user(
+            email=email.strip(), nome=nome.strip(), password=password, tipo=tipo
         )
+
+        if eh_administrador:
+            novo_usuario.is_staff = True
+            novo_usuario.save()
 
         return redirect("inicio")
     
-    return render(request, "Cadastro_usuario.html")
+    return render(request, "usuarios.html", contexto_base)
 
 # Consultas
 
@@ -342,6 +297,20 @@ def buscar_movimentacoes(chave = None, pessoa = None, data_inicio = None, data_f
         movimentacoes = movimentacoes.filter(data_hora_retirada__lte=data_fim)
 
     return movimentacoes
+
+def _filtros_relatorio(request):
+    chave_id = request.GET.get("chave")
+    pessoa_id = request.GET.get("pessoa")
+    chave = Chave.objects.filter(id=chave_id).first() if chave_id else None
+    pessoa = Pessoa.objects.filter(id=pessoa_id).first() if pessoa_id else None
+
+    return buscar_movimentacoes(
+        chave=chave,
+        pessoa=pessoa,
+        data_inicio=request.GET.get("data_inicio"),
+        data_fim=request.GET.get("data_fim"),
+    )
+
 
 @login_required
 def historico(request):
@@ -365,8 +334,10 @@ def historico(request):
         data_fim=data_fim,
     )
 
-    return render(request, "historico.html", {
-        "movimentacoes": movimentacoes
+    return render(request, "relatorios.html", {
+        "movimentacoes": _filtros_relatorio(request),
+        "chaves": Chave.objects.all(),
+        "pessoas": Pessoa.objects.all(),
     })
 
 
@@ -390,6 +361,8 @@ def relatorio(request):
         data_fim=data_fim,
     )
 
-    return render(request, "relatorio.html", {
-        "movimentacoes": movimentacoes
+    return render(request, "relatorios.html", {
+        "movimentacoes": _filtros_relatorio(request),
+        "chaves": Chave.objects.all(),
+        "pessoas": Pessoa.objects.all(),
     })

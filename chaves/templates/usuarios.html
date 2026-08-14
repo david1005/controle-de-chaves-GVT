@@ -143,7 +143,7 @@
                                 {% if usuario.is_staff %}
                                     <span class="badge bg-primary">Administrador</span>
                                 {% endif %}
-                                {% if usuario.operador %}
+                                {% if usuario.tipo == "operador" %}
                                     <span class="badge bg-success">Operador</span>
                                 {% endif %}
                                 {% if not usuario.is_staff and not usuario.operador %}

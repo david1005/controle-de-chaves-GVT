@@ -16,7 +16,39 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from chaves import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # Autenticação
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+
+    # Página principal
+    path('', views.inicio, name='inicio'),
+
+    # Movimentações
+    path('retirada/', views.retirada, name='retirada'),
+    path('devolucao/', views.registrar_devolucao, name='registrar_devolucao'),
+
+    # Chaves — listagem/painel
+    path('chaves/', views.lista_chaves, name='lista_chaves'),
+    path('chaves-abertas/', views.lista_chaves, name='chaves_abertas'),
+
+    # Chaves — cadastro/edição
+    path('chaves/cadastrar/', views.cadastrar_chave, name='cadastrar_chave'),
+    path('chaves/<int:chave_id>/editar/', views.editar_chave, name='editar_chave'),
+    path('chaves/<int:chave_id>/inativar/', views.inativar_chave, name='inativar_chave'),
+
+    # Pessoas
+    path('pessoas/cadastrar/', views.cadastrar_pessoa, name='cadastrar_pessoa'),
+    path('pessoas/<int:pessoa_id>/editar/', views.editar_pessoa, name='editar_pessoa'),
+
+    # Usuários
+    path('usuarios/', views.cadastrar_usuario, name='cadastrar_usuario'),
+
+    # Consultas
+    path('historico/', views.historico, name='historico'),
+    path('relatorios/', views.relatorio, name='relatorio'),
 ]
