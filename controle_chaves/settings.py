@@ -100,6 +100,12 @@ DATABASES = {
 AUTH_USER_MODEL = "chaves.Usuario"
 LOGIN_URL = "login"
 
+# Sessão
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # 30 dias, em segundos
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # mantém sessão mesmo fechando o navegador
+SESSION_SAVE_EVERY_REQUEST = True  # renova a contagem a cada requisição (usuário ativo nunca expira)
+# SESSION_COOKIE_SECURE = True  # descomentar quando o servidor tiver HTTPS configurado
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
