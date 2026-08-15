@@ -195,10 +195,14 @@ class CadastrarUsuarioTests(TestCase):
         self.assertEqual(novo_usuario.tipo, "operador")
         self.assertFalse(novo_usuario.is_staff)
 
-    def test_badge_administrador_aparece_uma_unica_vez(self):
+    def test_badge_administrador_aparece_para_administrador(self):
         resposta = self.client.get(reverse("cadastrar_usuario"))
 
-        self.assertContains(resposta, "Administrador", count=1)
+        self.assertContains(
+            resposta,
+            '<span class="badge bg-primary">Administrador</span>',
+            html=True,
+        )
 
     def test_badge_operador_para_usuario_comum(self):
         Usuario.objects.create_user(

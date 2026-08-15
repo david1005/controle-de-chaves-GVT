@@ -138,7 +138,7 @@
                             <td>{{ usuario.nome }}</td>
                             <td>{{ usuario.email }}</td>
                             <td>
-                                {% if usuario.is_staff %}
+                                {% if usuario.tipo == "administrador" %}
                                     <span class="badge bg-primary">Administrador</span>
                                 {% elif usuario.tipo == "operador" %}
                                     <span class="badge bg-success">Operador</span>
