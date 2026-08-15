@@ -285,22 +285,23 @@ def cadastrar_usuario(request):
     if not request.user.is_administrador():
         return redirect("inicio")
 
-    contexto_base = {"usuários": Usuario.objects.all()}
+    contexto_base = {"usuarios": Usuario.objects.all()}
 
     if request.method == "POST":
         nome = request.POST.get("nome")
         email = request.POST.get("email")
         password = request.POST.get("password")
-        tipo = request.POST.get("tipo")
+        # Cadastro pela interface sempre cria operador. Administradores são criados via `createsuperuser` ou pelo Django admin.
+        tipo = "operador"
 
         if not nome or not nome.strip():
-            return render(request, "cadastro.html", {**contexto_base, "erro": "O nome do operador é obrigatório!"})
+            return render(request, "usuarios.html", {**contexto_base, "erro": "O nome do operador é obrigatório!"})
 
         if not email or not email.strip():
-            return render(request, "cadastro.html", {**contexto_base, "erro": "O e-mail é obrigatório!"})
+            return render(request, "usuarios.html", {**contexto_base, "erro": "O e-mail é obrigatório!"})
 
         if not password:
-            return render(request, "cadastro.html", {
+            return render(request, "usuarios.html", {
                 **contexto_base,
                 "erro": "A senha é obrigatória!"
             })

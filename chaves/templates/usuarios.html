@@ -58,10 +58,10 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
             <i class="fa-solid fa-circle-user me-2 icon-perfil"></i>
-            <span>João Silva</span>
+            <span>{{ user.nome }}</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item text-danger" href="login.html"><i class="fa-solid fa-right-from-bracket me-2"></i>Sair</a></li>
+            <li><a class="dropdown-item text-danger" href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket me-2"></i>Sair</a></li>
             </ul>
         </li>
         </ul>
@@ -140,11 +140,9 @@
                             <td>
                                 {% if usuario.is_staff %}
                                     <span class="badge bg-primary">Administrador</span>
-                                {% endif %}
-                                {% if usuario.tipo == "operador" %}
+                                {% elif usuario.tipo == "operador" %}
                                     <span class="badge bg-success">Operador</span>
-                                {% endif %}
-                                {% if not usuario.is_staff and not usuario.operador %}
+                                {% else %}
                                     <span class="badge bg-secondary">Usuário comum</span>
                                 {% endif %}
                             </td>
