@@ -111,7 +111,16 @@
                     <td>
                         <a href="{% url 'editar_chave' chave.id %}" class="btn btn-sm btn-outline-primary">Editar</a>
                         {% if chave.ativa %}
-                        <a href="{% url 'inativar_chave' chave.id %}" class="btn btn-sm btn-outline-danger">Inativar</a>
+                        <form method="post" action="{% url 'inativar_chave' chave.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button
+                            type="submit"
+                            class="btn btn-sm btn-outline-danger"
+                            onclick="return confirm('Deseja realmente inativar esta chave?');"
+                        >
+                            Inativar
+                        </button>
+                    </form>
                         {% endif %}
                     </td>
                 </tr>

@@ -2,6 +2,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.utils import timezone
+from django.core.validators import FileExtensionValidator
 
 
 class UsuarioManager(BaseUserManager):
@@ -75,7 +76,7 @@ class Pessoa(models.Model):
     nome = models.CharField(max_length=100)
     matricula = models.CharField(max_length=100, unique=True)
     cargo = models.CharField(max_length=100, blank=True, null=True)
-    foto = models.ImageField(upload_to='fotos_pessoas/', blank=True, null=True)
+    foto = models.ImageField(upload_to='fotos_pessoas/', blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'webp'])])
 
     class Meta:
         ordering = ['nome']

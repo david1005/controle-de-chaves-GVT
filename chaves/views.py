@@ -3,6 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.utils import timezone
 from .models import Usuario, Chave, Pessoa, Movimentacao
+from django.views.decorators.http import require_POST
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 
 # Autenticação
 
@@ -106,7 +109,7 @@ def lista_chaves(request):
 
 @login_required
 def cadastrar_chave(request):
-    if request.user.tipo != "administrador":
+    if not request.user.is_administrador():
         return redirect("inicio")
 
     if request.method == "POST":
@@ -123,9 +126,16 @@ def cadastrar_chave(request):
             return render(request, "cadastro.html", {
                 "erro": "O local é obrigatório!"
             })
+            
+        codigo = codigo.strip()
+
+        if Chave.objects.filter(codigo=codigo).exists():
+            return render(request, "cadastro.html", {
+            "erro": "Já existe uma chave cadastrada com este código."
+    })
 
 
-        Chave.objects.create(codigo=codigo.strip(), local=local.strip(), observacoes=observacoes)
+        Chave.objects.create(codigo=codigo, local=local.strip(), observacoes=observacoes)
 
         return redirect("inicio")
     
@@ -152,6 +162,7 @@ def editar_chave(request, chave_id):
     return render(request, "editar_chave.html", {"chave": chave})
 
 @login_required
+@require_POST
 def inativar_chave(request, chave_id):
     if not request.user.is_administrador():
         return redirect("inicio")
@@ -160,7 +171,7 @@ def inativar_chave(request, chave_id):
         chave = Chave.objects.get(id=chave_id)
     except Chave.DoesNotExist:
         return redirect("inicio")
-
+    
     chave.ativa = False
     chave.save()
 
@@ -170,7 +181,7 @@ def inativar_chave(request, chave_id):
 
 @login_required
 def cadastrar_pessoa(request):
-    if request.user.tipo != "administrador":
+    if not request.user.is_administrador():
         return redirect("inicio")
 
     if request.method == "POST":
@@ -188,7 +199,14 @@ def cadastrar_pessoa(request):
         if not cargo or not cargo.strip():
             return render(request, "cadastro.html", {"erro": "O cargo é obrigatório!"})
 
-        Pessoa.objects.create(nome=nome.strip(), matricula=matricula.strip(), cargo=cargo.strip(), foto=foto)
+        nova_pessoa = Pessoa(nome=nome.strip(), matricula=matricula.strip(), cargo=cargo.strip(), foto=foto)
+
+        try:
+            nova_pessoa.full_clean()
+        except ValidationError as erro:
+            return render(request, "cadastro.html", {"erro": " ".join(erro.messages)})
+
+        nova_pessoa.save()
 
         return redirect("inicio")
 
@@ -227,10 +245,15 @@ def editar_pessoa(request, pessoa_id):
         if foto:
             pessoa.foto = foto
 
+        try:
+            pessoa.full_clean()
+        except ValidationError as erro:
+            return render(request, "editar_pessoa.html", {"pessoa": pessoa, "erro": " ".join(erro.messages)})
+
         pessoa.save()
 
         return redirect("inicio")
-
+    
     return render(request, "editar_pessoa.html", {"pessoa": pessoa})
         
 
@@ -247,7 +270,6 @@ def cadastrar_usuario(request):
         nome = request.POST.get("nome")
         email = request.POST.get("email")
         password = request.POST.get("password")
-        eh_administrador = request.POST.get("is_staff") == "on"
         tipo = request.POST.get("tipo")
 
         if not nome or not nome.strip():
@@ -257,7 +279,18 @@ def cadastrar_usuario(request):
             return render(request, "cadastro.html", {**contexto_base, "erro": "O e-mail é obrigatório!"})
 
         if not password:
-            return render(request, "cadastro.html", {**contexto_base, "erro": "A senha é obrigatória!"})
+            return render(request, "cadastro.html", {
+                **contexto_base,
+                "erro": "A senha é obrigatória!"
+            })
+            
+        try:
+            validate_password(password)
+        except ValidationError as erro:
+            return render(request, "usuarios.html", {
+            **contexto_base,
+            "erro": " ".join(erro.messages),
+        })
 
         if tipo not in ("operador", "administrador"):
             tipo = "operador"
@@ -267,15 +300,20 @@ def cadastrar_usuario(request):
                 **contexto_base, "erro": "Já existe um usuário com esse e-mail."
             })
 
-        novo_usuario = Usuario.objects.create_user(
-            email=email.strip(), nome=nome.strip(), password=password, tipo=tipo
-        )
+        novo_usuario = Usuario(email=email.strip(), nome=nome.strip(), tipo=tipo)
+        novo_usuario.set_password(password)
 
-        if eh_administrador:
-            novo_usuario.is_staff = True
-            novo_usuario.save()
+        try:
+            novo_usuario.full_clean()
+        except ValidationError as erro:
+            return render(request, "usuarios.html", {
+                **contexto_base, "erro": " ".join(erro.messages)
+            })
+
+        novo_usuario.save()
 
         return redirect("inicio")
+
     
     return render(request, "usuarios.html", contexto_base)
 
@@ -319,20 +357,6 @@ def historico(request):
 
     # TODO: ainda precisa ser definida a diferença de comportamento
     # em relação a relatorio() — por enquanto reaproveita a mesma busca.
-    chave_id = request.GET.get("chave")
-    pessoa_id = request.GET.get("pessoa")
-    data_inicio = request.GET.get("data_inicio")
-    data_fim = request.GET.get("data_fim")
-
-    chave = Chave.objects.filter(id=chave_id).first() if chave_id else None
-    pessoa = Pessoa.objects.filter(id=pessoa_id).first() if pessoa_id else None
-
-    movimentacoes = buscar_movimentacoes(
-        chave=chave,
-        pessoa=pessoa,
-        data_inicio=data_inicio,
-        data_fim=data_fim,
-    )
 
     return render(request, "relatorios.html", {
         "movimentacoes": _filtros_relatorio(request),
@@ -343,23 +367,8 @@ def historico(request):
 
 @login_required
 def relatorio(request):
-    if request.user.tipo != "administrador":
+    if not request.user.is_administrador():
         return redirect("inicio")
-
-    chave_id = request.GET.get("chave")
-    pessoa_id = request.GET.get("pessoa")
-    data_inicio = request.GET.get("data_inicio")
-    data_fim = request.GET.get("data_fim")
-
-    chave = Chave.objects.filter(id=chave_id).first() if chave_id else None
-    pessoa = Pessoa.objects.filter(id=pessoa_id).first() if pessoa_id else None
-
-    movimentacoes = buscar_movimentacoes(
-        chave=chave,
-        pessoa=pessoa,
-        data_inicio=data_inicio,
-        data_fim=data_fim,
-    )
 
     return render(request, "relatorios.html", {
         "movimentacoes": _filtros_relatorio(request),
