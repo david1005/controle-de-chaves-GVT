@@ -56,7 +56,7 @@
         <ul class="navbar-nav">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
-            <i class="fa-solid fa-circle-user me-2" style="font-size: 1.4rem;"></i>
+            <i class="fa-solid fa-circle-user me-2 icon-perfil"></i>
             <span>João Silva</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
@@ -70,6 +70,10 @@
     </nav>
 
 <div class="container py-4">
+    <button type="button" class="btn btn-voltar mb-3" onclick="window.history.back()">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+    </button>
+
     <h2 class="fw-bold mb-4">Relatório de Movimentações</h2>
 
     <form method="get" action="{% url 'relatorio' %}" class="row g-3 mb-4">
@@ -137,5 +141,6 @@
     </table>
     </div>
 </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

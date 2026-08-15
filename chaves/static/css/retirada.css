@@ -1,7 +1,7 @@
 :root {
-  --cor-marca: #dab214;
-  --cor-marca-escura: #b8960f;
-  --cor-navy: #07092c;
+  --cor-marca: #c9a227;
+  --cor-marca-escura: #a8841c;
+  --cor-navy: #0b3d66;
 }
 
 body {
@@ -12,11 +12,11 @@ body {
 .barra-horizontal {
   background-color: var(--cor-marca);
   height: 4px;
-  width: 290px;
+  width: 230px;
 }
 
 .navbar-custom {
-  background-color: rgb(7, 9, 44);
+  background-color: #082c4a;
 }
 
 .navbar-custom .navbar-brand {
@@ -74,8 +74,8 @@ body {
 }
 
 .dropdown-item:hover {
-  background-color: #f4f0fd;
-  color: rgb(7, 9, 44);
+  background-color: #eaf1f8;
+  color: #082c4a;
 }
 
 @media (max-width: 767.98px) {
@@ -124,15 +124,51 @@ body {
 }
 
 .btn-salvar:focus {
-  box-shadow: 0 0 0 0.25rem rgba(218, 178, 20, 0.4);
+  box-shadow: 0 0 0 0.25rem rgba(201, 162, 39, 0.4);
 }
 
 
+.icon-perfil {
+  font-size: 1.4rem;
+}
+
+.textarea-observacoes-compacta {
+  height: 90px;
+}
+
+.btn-primary {
+  background-color: var(--cor-marca);
+  border-color: var(--cor-marca);
+  color: var(--cor-navy);
+  font-weight: 700;
+}
+
+.btn-primary:hover {
+  background-color: var(--cor-marca-escura);
+  border-color: var(--cor-marca-escura);
+  color: #fff;
+}
+
+.btn-outline-primary {
+  color: var(--cor-navy);
+  border-color: var(--cor-navy);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--cor-navy);
+  border-color: var(--cor-navy);
+  color: #fff;
+}
+
+.pagina-form {
+  position: relative;
+}
+
 .btn-voltar {
   position: absolute;
-  top: 90px;
+  top: 24px;
   left: 24px;
-  background-color: transparent;
+  background-color: rgba(255, 255, 255, 0.12);
   border: 2px solid #fff;
   color: #fff;
   border-radius: 30px;
@@ -140,6 +176,7 @@ body {
   letter-spacing: 0.5px;
   padding: 8px 20px;
   z-index: 10;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   transition: transform 0.2s ease, box-shadow 0.2s ease,
               background-color 0.2s ease, color 0.2s ease;
 }
@@ -171,8 +208,8 @@ body {
 
 @media (max-width: 480px) {
   .btn-voltar {
-    top: 12px;
-    left: 12px;
+    top: 16px;
+    left: 16px;
     padding: 6px 14px;
     font-size: 0.9rem;
   }
@@ -235,6 +272,22 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 input[type="date"]::-webkit-calendar-picker-indicator {
   opacity: 0;
   pointer-events: none;
+}
+
+.preview-foto {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.preview-foto i {
+  font-size: 1.8rem;
+  color: #999;
 }
 
 .preview-foto img {

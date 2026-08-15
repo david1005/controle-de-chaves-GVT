@@ -1,8 +1,8 @@
 :root {
-  --cor-marca: #dab214;
-  --cor-marca-escura: #b8960f;
-  --cor-navy: #07092c;
-  --cor-navy-clara: #12153f;
+  --cor-marca: #c9a227;
+  --cor-marca-escura: #a8841c;
+  --cor-navy: #0b3d66;
+  --cor-navy-clara: #14507f;
   --cor-texto: #252424;
   --cor-texto-suave: #666;
 }
@@ -22,8 +22,8 @@ body {
   align-items: center;
   background-color: var(--cor-navy);
   background-image:
-    radial-gradient(circle at 15% 20%, rgba(218, 178, 20, 0.12), transparent 40%),
-    radial-gradient(circle at 85% 80%, rgba(218, 178, 20, 0.08), transparent 45%),
+    radial-gradient(circle at 15% 20%, rgba(201, 162, 39, 0.12), transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(201, 162, 39, 0.08), transparent 45%),
     linear-gradient(160deg, var(--cor-navy) 0%, var(--cor-navy-clara) 100%);
   background-attachment: fixed;
   margin: 0;
@@ -117,7 +117,7 @@ input:focus {
   outline: none;
   border-color: var(--cor-marca);
   background-color: #fff;
-  box-shadow: 0 0 0 4px rgba(218, 178, 20, 0.18);
+  box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.18);
 }
 
 input::placeholder {
@@ -141,38 +141,44 @@ input::placeholder {
 }
 
 
-a,
+.erro-login {
+  color: #c0392b;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
 #button {
   background-color: var(--cor-marca);
   border: none;
   border-radius: 30px;
   letter-spacing: 0.5px;
-  transition: transform 0.25s ease, box-shadow 0.55s ease;
+  transition: transform 0.25s ease, box-shadow 0.55s ease,
+              background-color 0.25s ease;
   padding: 13px;
   align-self: center;
   text-align: center;
   width: 100%;
-  border-radius: 30px;
   font-size: 15px;
+  font-weight: 700;
   color: #fff;
+  cursor: pointer;
 }
 
-a,
 #button:hover {
-  background-color: var(--cor-marca);
+  background-color: var(--cor-marca-escura);
   filter: brightness(1.05);
   transform: translateY(-6px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
 }
 
-a,
 #button:active {
-  background-color: var(--cor-marca-escura) !important;
+  background-color: var(--cor-marca-escura);
   transform: translateY(0);
   box-shadow: none;
 }
 
-a,
 #button:focus {
-  box-shadow: 0 0 0 0.25rem rgba(218, 178, 20, 0.4);
+  outline: none;
+  box-shadow: 0 0 0 0.25rem rgba(201, 162, 39, 0.4);
 }
