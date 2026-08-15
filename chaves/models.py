@@ -106,8 +106,9 @@ class Movimentacao(models.Model):
         blank=True,
         null=True
     )
-    data_hora_retirada = models.DateTimeField(auto_now_add=True)
+    data_hora_retirada = models.DateTimeField(default=timezone.now)
     data_hora_devolucao = models.DateTimeField(blank=True, null=True)
+    observacoes = models.TextField(blank=True, null=True)
 
     class Meta:
         ordering = ['-data_hora_retirada']
@@ -121,6 +122,10 @@ class Movimentacao(models.Model):
 
     def __str__(self):
         return f"Movimentação - Chave: {self.chave.codigo} - Pessoa: {self.pessoa.nome} - Retirada: {self.data_hora_retirada} - Devolução: {self.data_hora_devolucao if self.data_hora_devolucao else 'Não devolvida'}"
+
+    @property
+    def status(self):
+        return "devolvida" if self.data_hora_devolucao else "retirada"
 
     def clean(self):
         if not self.chave.esta_disponivel() and self.data_hora_devolucao is None:

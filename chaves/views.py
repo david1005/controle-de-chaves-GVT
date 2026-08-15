@@ -6,6 +6,7 @@ from .models import Usuario, Chave, Pessoa, Movimentacao
 from django.views.decorators.http import require_POST
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from datetime import datetime
 
 # Autenticação
 
@@ -49,6 +50,9 @@ def registrar_retirada(request):
         
         chave_id = request.POST.get("chave")
         pessoa_id = request.POST.get("pessoa")
+        data = request.POST.get("data")
+        horario = request.POST.get("horario")
+        observacoes = request.POST.get("observacoes", "").strip()
 
         try:
             chave = Chave.objects.get(id=chave_id)
@@ -66,7 +70,24 @@ def registrar_retirada(request):
         if not chave.esta_disponivel():
             return render(request, "retirada.html", {**contexto_base, "erro": "Essa chave já foi retirada e não foi devolvida."})
 
-        Movimentacao.objects.create(chave=chave, pessoa=pessoa, operador=request.user)
+        try:
+            data_hora_retirada = timezone.make_aware(
+                datetime.strptime(f"{data} {horario}", "%Y-%m-%d %H:%M"),
+                timezone.get_current_timezone(),
+            )
+        except (TypeError, ValueError):
+            return render(request, "retirada.html", {
+                **contexto_base,
+                "erro": "Informe uma data e um horário de retirada válidos.",
+            })
+
+        Movimentacao.objects.create(
+            chave=chave,
+            pessoa=pessoa,
+            operador=request.user,
+            data_hora_retirada=data_hora_retirada,
+            observacoes=observacoes or None,
+        )
 
         return redirect("inicio")
 
