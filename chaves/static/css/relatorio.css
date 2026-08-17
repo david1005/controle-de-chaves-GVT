@@ -325,3 +325,68 @@ textarea.form-control:focus {
 .btn-check:focus + .btn-outline-danger {
   box-shadow: 0 0 0 0.2rem rgba(201, 162, 39, 0.25);
 }
+
+@media print {
+    /* Esconde elementos que não devem aparecer na impressão */
+    nav,
+    .btn-voltar,
+    form,
+    .btn-success {
+        display: none !important;
+    }
+
+    /* Remove espaçamentos desnecessários */
+    body {
+        background: white !important;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 10px !important;
+    }
+
+    /* Título */
+    h2 {
+        margin-bottom: 20px !important;
+        color: #000 !important;
+    }
+
+    /* Tabela */
+    .table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+
+    .table th,
+    .table td {
+        border: 1px solid #000 !important;
+        color: #000 !important;
+        padding: 8px !important;
+    }
+
+    .table thead {
+        background-color: #eee !important;
+    }
+
+    /* Evita que uma linha seja dividida entre páginas */
+    tr {
+        page-break-inside: avoid;
+    }
+
+    /* Remove efeitos do Bootstrap */
+    .table-hover tbody tr:hover {
+        background-color: transparent !important;
+    }
+
+    /* Remove o badge colorido da tela de impressão */
+    .badge {
+        background: none !important;
+        color: #000 !important;
+        padding: 0 !important;
+        font-weight: normal !important;
+    }
+}

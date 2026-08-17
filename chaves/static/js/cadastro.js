@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
   
   const tabChave = document.getElementById('tab-chave');
   const tabPessoa = document.getElementById('tab-pessoa');
+  const tabLocal = document.getElementById('tab-local');
   const tipoInput = document.getElementById('tipo_cadastro');
 
   tabChave.addEventListener('shown.bs.tab', function () {
@@ -11,6 +12,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
   tabPessoa.addEventListener('shown.bs.tab', function () {
     tipoInput.value = 'pessoa';
+  });
+
+  tabLocal.addEventListener('shown.bs.tab', function () {
+    tipoInput.value = 'local';
   });
 
   
@@ -37,7 +42,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const tipo = tipoInput.value;
     form.action = tipo === 'pessoa'
       ? form.dataset.urlPessoa
-      : form.dataset.urlChave;
+      : tipo === 'local'
+        ? form.dataset.urlLocal
+        : form.dataset.urlChave;
     
   });
 

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.utils import timezone
-from .models import Usuario, Chave, Pessoa, Movimentacao
+from .models import Usuario, Chave, Local, Pessoa, Movimentacao
 from django.views.decorators.http import require_POST
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
@@ -89,7 +89,7 @@ def registrar_retirada(request):
             observacoes=observacoes or None,
         )
 
-        return redirect("inicio")
+        return redirect("retirada")
 
     return render(request, "retirada.html", contexto_base)
 
@@ -114,7 +114,7 @@ def registrar_devolucao(request):
         movimentacao.data_hora_devolucao = timezone.now()
         movimentacao.save()
 
-        return redirect("inicio")
+        return redirect("registrar_devolucao")
 
     return render(request, "devolucao.html", {"movimentacoes": movimentacoes_abertas})
 
@@ -126,12 +126,24 @@ def lista_chaves(request):
     return render(request, "lista.html", {"chaves": Chave.objects.all()})
 
 
+@login_required
+def lista_pessoas(request):
+    return render(request, "lista_pessoa.html", {"pessoas": Pessoa.objects.all()})
+
+
+@login_required
+def lista_usuarios(request):
+    if not request.user.is_administrador():
+        return redirect("inicio")
+    
+    return render(request, "lista_usuarios.html", {"usuarios": Usuario.objects.all()})
+
+
 # Chaves
 
 @login_required
 def cadastrar_chave(request):
-    if not request.user.is_administrador():
-        return redirect("inicio")
+    contexto_base = {"locais": Local.objects.all()}
 
     if request.method == "POST":
         codigo = request.POST.get("codigo")
@@ -140,11 +152,13 @@ def cadastrar_chave(request):
 
         if not codigo or not codigo.strip():
             return render(request, "cadastro.html", {
+                **contexto_base,
                 "erro": "O código da chave é obrigatório!"
             })
 
         if not local or not local.strip():
             return render(request, "cadastro.html", {
+                **contexto_base,
                 "erro": "O local é obrigatório!"
             })
             
@@ -152,20 +166,46 @@ def cadastrar_chave(request):
 
         if Chave.objects.filter(codigo=codigo).exists():
             return render(request, "cadastro.html", {
+                **contexto_base,
             "erro": "Já existe uma chave cadastrada com este código."
     })
 
 
         Chave.objects.create(codigo=codigo, local=local.strip(), observacoes=observacoes)
 
-        return redirect("inicio")
+        return redirect("cadastrar_chave")
     
-    return render(request, "cadastro.html")
+    return render(request, "cadastro.html", contexto_base)
+
+
+@login_required
+def cadastrar_local(request):
+    contexto_base = {"locais": Local.objects.all()}
+
+    if request.method == "POST":
+        nome = request.POST.get("nome_local")
+
+        if not nome or not nome.strip():
+            return render(request, "cadastro.html", {
+                **contexto_base,
+                "erro": "O nome do local é obrigatório!",
+            })
+
+        nome = nome.strip()
+        if Local.objects.filter(nome__iexact=nome).exists():
+            return render(request, "cadastro.html", {
+                **contexto_base,
+                "erro": "Já existe um local cadastrado com este nome.",
+            })
+
+        Local.objects.create(nome=nome)
+        return redirect("cadastrar_chave")
+
+    return render(request, "cadastro.html", contexto_base)
+
 
 @login_required
 def editar_chave(request, chave_id):
-    if not request.user.is_administrador():
-        return redirect("inicio")
 
     try:
         chave = Chave.objects.get(id=chave_id)
@@ -185,8 +225,6 @@ def editar_chave(request, chave_id):
 @login_required
 @require_POST
 def inativar_chave(request, chave_id):
-    if not request.user.is_administrador():
-        return redirect("inicio")
     
     try:
         chave = Chave.objects.get(id=chave_id)
@@ -198,13 +236,18 @@ def inativar_chave(request, chave_id):
 
     return redirect("inicio")
 
+@login_required
+@require_POST
+def reativar_chave(request, chave_id):
+    chave = get_object_or_404(Chave, id=chave_id)
+    chave.ativa = True
+    chave.save()
+    return redirect('lista_chaves')    
+
 # Pessoas
 
 @login_required
 def cadastrar_pessoa(request):
-    if not request.user.is_administrador():
-        return redirect("inicio")
-
     if request.method == "POST":
         nome = request.POST.get("nome")
         matricula = request.POST.get("matricula")
@@ -229,15 +272,13 @@ def cadastrar_pessoa(request):
 
         nova_pessoa.save()
 
-        return redirect("inicio")
+        return redirect("cadastrar_chave")
 
     return render(request, "cadastro.html")
 
 
 @login_required
 def editar_pessoa(request, pessoa_id):
-    if not request.user.is_administrador():
-        return redirect("inicio")
     
     try:
         pessoa = Pessoa.objects.get(id=pessoa_id)
@@ -373,9 +414,6 @@ def _filtros_relatorio(request):
 
 @login_required
 def relatorio(request):
-    if not request.user.is_administrador():
-        return redirect("inicio")
-
     return render(request, "relatorios.html", {
         "movimentacoes": _filtros_relatorio(request),
         "chaves": Chave.objects.all(),

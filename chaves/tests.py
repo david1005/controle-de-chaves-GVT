@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from .models import Chave, Movimentacao, Pessoa, Usuario
+from .models import Chave, Local, Movimentacao, Pessoa, Usuario
 
 class RegistrarRetiradaTests(TestCase):
     def setUp(self):
@@ -30,7 +30,7 @@ class RegistrarRetiradaTests(TestCase):
             "observacoes": "Uso em aula prática.",
         })
 
-        self.assertRedirects(resposta, reverse("inicio"))
+        self.assertRedirects(resposta, reverse("retirada"))
         movimentacao = Movimentacao.objects.get()
         esperado = timezone.make_aware(
             datetime(2026, 8, 15, 14, 30),
@@ -67,7 +67,7 @@ class RegistrarDevolucaoTests(TestCase):
             "chave": self.chave.id,
         })
 
-        self.assertRedirects(resposta, reverse("inicio"))
+        self.assertRedirects(resposta, reverse("registrar_devolucao"))
         movimentacao.refresh_from_db()
         self.assertIsNotNone(movimentacao.data_hora_devolucao)
         self.assertEqual(movimentacao.status, "devolvida")
@@ -109,18 +109,28 @@ class PermissoesAdministradorTests(TestCase):
         self.client.force_login(self.operador)
 
         rotas_get = [
-            reverse("cadastrar_chave"),
-            reverse("editar_chave", args=[self.chave.id]),
-            reverse("cadastrar_pessoa"),
-            reverse("editar_pessoa", args=[self.pessoa.id]),
             reverse("cadastrar_usuario"),
-            reverse("historico"),
-            reverse("relatorio"),
+            reverse("lista_usuarios"),
         ]
 
         for rota in rotas_get:
             resposta = self.client.get(rota)
             self.assertRedirects(resposta, reverse("inicio"))
+
+    def test_operador_acessa_telas_nao_restritas(self):
+        self.client.force_login(self.operador)
+
+        rotas_get = [
+            reverse("cadastrar_chave"),
+            reverse("editar_chave", args=[self.chave.id]),
+            reverse("cadastrar_pessoa"),
+            reverse("editar_pessoa", args=[self.pessoa.id]),
+            reverse("relatorio"),
+        ]
+
+        for rota in rotas_get:
+            resposta = self.client.get(rota)
+            self.assertEqual(resposta.status_code, 200)
 
     def test_operador_nao_consegue_inativar_chave(self):
         self.client.force_login(self.operador)
@@ -140,13 +150,130 @@ class PermissoesAdministradorTests(TestCase):
             reverse("cadastrar_pessoa"),
             reverse("editar_pessoa", args=[self.pessoa.id]),
             reverse("cadastrar_usuario"),
-            reverse("historico"),
+            reverse("lista_usuarios"),
             reverse("relatorio"),
         ]
 
         for rota in rotas_get:
             resposta = self.client.get(rota)
             self.assertEqual(resposta.status_code, 200)
+
+
+class ListaPessoasTests(TestCase):
+    def setUp(self):
+        self.operador = Usuario.objects.create_user(
+            email="operador@example.com",
+            nome="Operador",
+            password="senha-segura-123",
+        )
+        self.pessoa = Pessoa.objects.create(
+            nome="Pessoa Autorizada",
+            matricula="12345",
+            cargo="Tecnico",
+        )
+        self.client.force_login(self.operador)
+
+    def test_lista_exibe_pessoas_cadastradas(self):
+        resposta = self.client.get(reverse("lista_pessoas"))
+
+        self.assertContains(resposta, self.pessoa.nome)
+        self.assertContains(resposta, self.pessoa.matricula)
+        self.assertContains(resposta, reverse("editar_pessoa", args=[self.pessoa.id]))
+
+
+class ListaUsuariosTests(TestCase):
+    def setUp(self):
+        self.operador = Usuario.objects.create_user(
+            email="operador@example.com",
+            nome="Operador",
+            password="senha-segura-123",
+        )
+        self.administrador = Usuario.objects.create_user(
+            email="admin@example.com",
+            nome="Administradora",
+            password="senha-segura-123",
+            tipo="administrador",
+        )
+        self.usuario = Usuario.objects.create_user(
+            email="usuario@example.com",
+            nome="Usuario do Sistema",
+            password="senha-segura-123",
+        )
+        Pessoa.objects.create(
+            nome="Pessoa Autorizada",
+            matricula="12345",
+            cargo="Tecnico",
+        )
+        self.client.force_login(self.operador)
+
+    def test_lista_exibe_apenas_usuarios_do_sistema(self):
+        self.client.force_login(self.administrador)
+
+        resposta = self.client.get(reverse("lista_usuarios"))
+
+        self.assertContains(resposta, self.usuario.nome)
+        self.assertContains(resposta, self.usuario.email)
+        self.assertNotContains(resposta, "Pessoa Autorizada")
+
+    def test_operador_e_redirecionado_da_lista_de_usuarios(self):
+        self.client.force_login(self.operador)
+
+        resposta = self.client.get(reverse("lista_usuarios"))
+
+        self.assertRedirects(resposta, reverse("inicio"))
+
+
+class RedirecionamentoCadastroTests(TestCase):
+    def setUp(self):
+        self.operador = Usuario.objects.create_user(
+            email="operador@example.com",
+            nome="Operador",
+            password="senha-segura-123",
+        )
+        self.client.force_login(self.operador)
+
+    def test_cadastro_de_chave_retorna_para_pagina_de_cadastro(self):
+        resposta = self.client.post(reverse("cadastrar_chave"), {
+            "codigo": "LAB-02",
+            "local": "Laboratorio 2",
+        })
+
+        self.assertRedirects(resposta, reverse("cadastrar_chave"))
+
+    def test_cadastro_de_pessoa_retorna_para_pagina_de_cadastro(self):
+        resposta = self.client.post(reverse("cadastrar_pessoa"), {
+            "nome": "Pessoa Autorizada",
+            "nome_local": "",
+            "matricula": "12345",
+            "cargo": "Tecnico",
+        })
+
+        self.assertRedirects(resposta, reverse("cadastrar_chave"))
+        self.assertTrue(Pessoa.objects.filter(matricula="12345").exists())
+
+
+class CadastrarLocalTests(TestCase):
+    def setUp(self):
+        self.operador = Usuario.objects.create_user(
+            email="operador@example.com",
+            nome="Operador",
+            password="senha-segura-123",
+        )
+        self.client.force_login(self.operador)
+
+    def test_operador_cadastra_local(self):
+        resposta = self.client.post(reverse("cadastrar_local"), {"nome_local": "Laboratorio 7"})
+
+        self.assertRedirects(resposta, reverse("cadastrar_chave"))
+        self.assertTrue(Local.objects.filter(nome="Laboratorio 7").exists())
+
+    def test_nao_permite_local_duplicado_sem_diferenciar_maiusculas(self):
+        Local.objects.create(nome="Laboratorio 7")
+
+        resposta = self.client.post(reverse("cadastrar_local"), {"nome_local": "laboratorio 7"})
+
+        self.assertEqual(resposta.status_code, 200)
+        self.assertEqual(Local.objects.count(), 1)
 
 
 class CadastrarUsuarioTests(TestCase):

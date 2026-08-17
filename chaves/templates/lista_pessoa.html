@@ -1,17 +1,28 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Devolução de Chave</title>
-    <link rel="stylesheet" href="{% static 'css/devolucao.css' %}" />
-    <link rel="icon" type="image/x-icon" href="{% static 'images/icon-cadastro.png' %}" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <title>Lista de Pessoas</title>
+
+    <link rel="stylesheet" href="{% static 'css/lista.css' %}" />
+    <link rel="icon" type="image/x-icon" href="{% static 'images/icon-home.png' %}" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+          crossorigin="anonymous">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-md navbar-custom px-3">
+
+        <nav class="navbar navbar-expand-md navbar-custom px-3">
     <div class="container-fluid">
         <a class="navbar-brand">Controle de Chaves</a>
         <button class="navbar-toggler" type="button"
@@ -80,46 +91,108 @@
     </div>
     </nav>
 
-    <div class="d-flex align-items-center justify-content-center min-vh-100 py-4 px-3 pagina-form">
-    <button type="button" class="btn btn-voltar" onclick="window.history.back()">
-        <i class="fa-solid fa-arrow-left"></i> Voltar
-    </button>
-    <div class="card shadow-lg border-0 form-card">
-        <div class="card-body p-4 p-md-5">
 
-        <h2 class="fw-bold mb-1">Devolução de Chave</h2>
-        <div class="barra-horizontal mb-4"></div>
+    <div class="container py-4">
 
-        {% if erro %}
-        <div class="alert alert-danger">{{ erro }}</div>
-        {% endif %}
+        <button type="button"
+                class="btn btn-voltar mb-3"
+                onclick="window.history.back()">
 
-        {% if movimentacoes %}
-        <form method="post" action="{% url 'registrar_devolucao' %}">
-            {% csrf_token %}
-            <div class="form-floating mb-4">
-                <select class="form-select" id="chave" name="chave" required>
-                    <option value="" selected disabled>Selecione a chave a devolver</option>
-                    {% for mov in movimentacoes %}
-                    <option value="{{ mov.chave.id }}">
-                        Chave {{ mov.chave.codigo }} — com {{ mov.pessoa.nome }} desde {{ mov.data_hora_retirada|date:"d/m/Y H:i" }}
-                    </option>
-                    {% endfor %}
-                </select>
-                <label for="chave">Chave em aberto</label>
-            </div>
+            <i class="fa-solid fa-arrow-left"></i>
+            Voltar
 
-            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold text-uppercase btn-salvar">
-                <i class="fa-solid fa-rotate-left me-2"></i>Confirmar Devolução
-            </button>
-        </form>
-        {% else %}
-        <p class="text-muted">Não há chaves em aberto no momento.</p>
-        {% endif %}
+        </button>
+
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <h2 class="fw-bold mb-0">
+                Lista de Pessoas
+            </h2>
+
+            <a href="{% url 'cadastrar_chave' %}" class="btn btn-primary">
+                <i class="fa-solid fa-user-plus me-1"></i>
+                Nova pessoa
+            </a>
 
         </div>
+
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+                        <th>Nome</th>
+                        <th>Cargo</th>
+                        <th>Matrícula</th>
+                        <th>Ações</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for pessoa in pessoas %}
+
+                    <tr>
+
+                        <td>
+                            {{ pessoa.nome }}
+                        </td>
+
+                        <td>
+                            {{ pessoa.cargo|default:"—" }}
+                        </td>
+
+                        <td>
+                            {{ pessoa.matricula }}
+                        </td>
+
+                        <td>
+
+                            <a href="{% url 'editar_pessoa' pessoa.id %}"
+                               class="btn btn-sm btn-outline-primary">
+
+                                <i class="fa-solid fa-pen me-1"></i>
+                                Editar
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="4"
+                            class="text-muted text-center">
+
+                            Nenhuma pessoa cadastrada.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
     </div>
-    </div>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
+
 </html>

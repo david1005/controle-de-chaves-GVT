@@ -70,6 +70,18 @@ class Chave(models.Model):
         movimentacoes_ativas = Movimentacao.objects.filter(chave=self, data_hora_devolucao__isnull=True)
         return not movimentacoes_ativas.exists()
     
+
+class Local(models.Model):
+    nome = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+        ordering = ["nome"]
+        verbose_name = "Local"
+        verbose_name_plural = "Locais"
+
+    def __str__(self):
+        return self.nome
+
     
 class Pessoa(models.Model):
     id = models.AutoField(primary_key=True)
