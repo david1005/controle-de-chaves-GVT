@@ -371,22 +371,6 @@ def _filtros_relatorio(request):
         data_fim=request.GET.get("data_fim"),
     )
 
-
-@login_required
-def historico(request):
-    if not request.user.is_administrador():
-        return redirect("inicio")
-
-    # TODO: ainda precisa ser definida a diferença de comportamento
-    # em relação a relatorio() — por enquanto reaproveita a mesma busca.
-
-    return render(request, "relatorios.html", {
-        "movimentacoes": _filtros_relatorio(request),
-        "chaves": Chave.objects.all(),
-        "pessoas": Pessoa.objects.all(),
-    })
-
-
 @login_required
 def relatorio(request):
     if not request.user.is_administrador():

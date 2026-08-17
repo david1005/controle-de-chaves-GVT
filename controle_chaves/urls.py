@@ -49,6 +49,5 @@ urlpatterns = [
     path('usuarios/', views.cadastrar_usuario, name='cadastrar_usuario'),
 
     # Consultas
-    path('historico/', views.historico, name='historico'),
     path('relatorios/', views.relatorio, name='relatorio'),
 ]
