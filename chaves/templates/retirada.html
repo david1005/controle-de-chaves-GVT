@@ -57,11 +57,13 @@
                     <i class="fa-solid fa-id-card"></i> Pessoas
                 </a>
                 </li>
+                {% if request.user.is_administrador %}
                 <li class="nav-item">
                 <a class="nav-link" href= "{% url 'lista_usuarios' %}">
                     <i class="fa-solid fa-users-gear"></i> Usuários
                 </a>
                 </li>
+                {% endif %}
             </ul>
 
         <ul class="navbar-nav">
