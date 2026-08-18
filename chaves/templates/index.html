@@ -1,10 +1,10 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Principal</title>
+    <title>Inicio | Controle de Chaves</title>
     <link rel="stylesheet" href="{% static 'css/index.css' %}" />
     <link rel="icon" type="image/x-icon" href="{% static 'images/icon-home.png' %}" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
@@ -12,157 +12,210 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-md navbar-custom px-3">
-    <div class="container-fluid">
-        <a class="navbar-brand">Controle de Chaves</a>
-        <button class="navbar-toggler" type="button"
-        data-bs-toggle="collapse" data-bs-target="#menuNav"
-        aria-controls="menuNav" aria-expanded="false" aria-label="Abrir menu">
-        <span class="navbar-toggler-icon"></span>
-        </button>
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'inicio' %}">Controle de Chaves</a>
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#menuNav"
+                    aria-controls="menuNav" aria-expanded="false" aria-label="Abrir menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <div class="collapse navbar-collapse" id="menuNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                <a class="nav-link" href= "{%  url 'inicio'  %}">
-                    <i class="fa-solid fa-house me-1"></i> Início
-                </a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href= "{% url 'retirada' %}">
-                    <i class="fa-solid fa-key me-1"></i> Retirada
-                </a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href= "{% url 'registrar_devolucao' %}">
-                    <i class="fa-solid fa-rotate-left me-1"></i> Devolução
-                </a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href= "{% url 'cadastrar_chave' %}">
-                    <i class="fa-solid fa-user-plus me-1"></i> Cadastro
-                </a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href= "{% url 'relatorio' %}">
-                    <i class="fa-solid fa-file-lines me-1"></i> Relatórios
-                </a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href= "{% url 'lista_chaves' %}">
-                    <i class="fa-solid fa-list-check"></i> Chaves
-                </a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href= "{% url 'lista_pessoas' %}">
-                    <i class="fa-solid fa-id-card"></i> Pessoas
-                </a>
-                </li>
-                {% if request.user.is_administrador %}
-                <li class="nav-item">
-                <a class="nav-link" href= "{% url 'lista_usuarios' %}">
-                <i class="fa-solid fa-users-gear"></i> Usuários
-                </a>
-                </li>
-                {% endif %}
-            </ul>
+            <div class="collapse navbar-collapse" id="menuNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'inicio' %}">
+                            <i class="fa-solid fa-house me-1"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'retirada' %}">
+                            <i class="fa-solid fa-key me-1"></i> Retirada
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'registrar_devolucao' %}">
+                            <i class="fa-solid fa-rotate-left me-1"></i> Devolucao
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'lista_chaves' %}">
+                            <i class="fa-solid fa-list-check me-1"></i> Chaves
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'lista_pessoas' %}">
+                            <i class="fa-solid fa-id-card me-1"></i> Pessoas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'relatorio' %}">
+                            <i class="fa-solid fa-file-lines me-1"></i> Relatorios
+                        </a>
+                    </li>
+                    {% if request.user.is_administrador %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'lista_usuarios' %}">
+                            <i class="fa-solid fa-users-gear me-1"></i> Usuarios
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
 
-        <ul class="navbar-nav">
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
-            <i class="fa-solid fa-circle-user me-2 icon-perfil"></i>
-            <span>{{ user.nome }}</span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item text-danger" href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket me-2"></i>Sair</a></li>
-            </ul>
-        </li>
-        </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fa-solid fa-circle-user me-2 icon-perfil"></i>
+                            <span>{{ user.nome }}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                                    <i class="fa-solid fa-right-from-bracket me-2"></i>Sair
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
-
-    </div>
     </nav>
 
-    <div class="card-wrapper">
-        <div class="card">
-            <div class="card-icon">
-            <i class="fa-solid fa-user-plus"></i>
+    <main class="dashboard-shell">
+        <section class="page-header">
+            <div>
+                <span class="eyebrow">Painel operacional</span>
+                <h1>Controle de Chaves</h1>
+                <p>Acompanhe retiradas, devolucoes e cadastros em um unico lugar.</p>
             </div>
-            <div class="card-body">
-            <h5 class="card-title">Cadastro</h5>
-            <p class="card-text">Cadastre novas chaves ou pessoas autorizadas a realizar movimentações no sistema.</p>
-            <a href="{% url 'cadastrar_chave' %}" class="btn btn-primary">Acessar</a>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-icon">
-            <i class="fa-solid fa-list-check"></i>
-            </div>
-            <div class="card-body">
-            <h5 class="card-title">Lista de Chaves</h5>
-            <p class="card-text">Visualize as chaves cadastradas, seu status atual e quem está com cada uma no momento.</p>
-            <a href="{% url 'lista_chaves' %}" class="btn btn-primary">Acessar</a>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-icon">
-            <i class="fa-solid fa-key"></i>
-            </div>
-            <div class="card-body">
-            <h5 class="card-title">Retirada de Chaves</h5>
-            <p class="card-text">Registre a retirada de chaves de forma rápida e organizada.</p>
-            <a href="{% url 'retirada' %}" class="btn btn-primary">Acessar</a>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-icon">
-            <i class="fa-solid fa-rotate-left"></i>
-            </div>
-            <div class="card-body">
-            <h5 class="card-title">Devolução de Chaves</h5>
-            <p class="card-text">Confirme a devolução das chaves ao setor responsável.</p>
-            <a href="{% url 'registrar_devolucao' %}" class="btn btn-primary">Acessar</a>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-icon">
-            <i class="fa-solid fa-file-lines"></i>
-            </div>
-            <div class="card-body">
-            <h5 class="card-title">Relatórios</h5>
-            <p class="card-text">Visualize relatórios completos de movimentações.</p>
-            <a href="{% url 'relatorio' %}" class="btn btn-primary">Acessar</a>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-icon">
-            <i class="fa-solid fa-id-card"></i>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title">Lista de Pessoas</h5>
-                <p class="card-text">
-                    Visualize as pessoas cadastradas e gerencie as pessoas autorizadas a realizar movimentações de chaves.
-                </p>
-                <a href="{% url 'lista_pessoas' %}" class="btn btn-primary">
-                    Acessar
+            <div class="header-actions">
+                <a class="btn btn-accent" href="{% url 'retirada' %}">
+                    <i class="fa-solid fa-key"></i>
+                    Retirar chave
+                </a>
+                <a class="btn btn-light-action" href="{% url 'registrar_devolucao' %}">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    Registrar devolucao
                 </a>
             </div>
-        </div>
-        {% if request.user.is_staff %}
-<div class="card">
-    <div class="card-icon">
-    <i class="fa-solid fa-users-gear"></i>
-    </div>
-    <div class="card-body">
-        <h5 class="card-title">Lista de Usuários</h5>
-        <p class="card-text">
-            Visualize, gerencie e cadastre novos usuários para acessar o sistema.
-        </p>
-        <a href="{% url 'lista_usuarios' %}" class="btn btn-primary">
-            Acessar
-        </a>
-    </div>
-</div>
-{% endif %}
+        </section>
+
+        <section class="metric-grid" aria-label="Resumo do sistema">
+            <article class="metric-card">
+                <span class="metric-icon available"><i class="fa-solid fa-circle-check"></i></span>
+                <div>
+                    <p>Chaves disponiveis</p>
+                    <strong>{{ chaves_disponiveis }}</strong>
+                </div>
+            </article>
+            <article class="metric-card">
+                <span class="metric-icon warning"><i class="fa-solid fa-key"></i></span>
+                <div>
+                    <p>Chaves retiradas</p>
+                    <strong>{{ chaves_retiradas }}</strong>
+                </div>
+            </article>
+            <article class="metric-card">
+                <span class="metric-icon neutral"><i class="fa-solid fa-door-open"></i></span>
+                <div>
+                    <p>Total de chaves</p>
+                    <strong>{{ total_chaves }}</strong>
+                </div>
+            </article>
+            <article class="metric-card">
+                <span class="metric-icon people"><i class="fa-solid fa-id-card"></i></span>
+                <div>
+                    <p>Pessoas cadastradas</p>
+                    <strong>{{ total_pessoas }}</strong>
+                </div>
+            </article>
+        </section>
+
+        <section class="content-grid">
+            <div class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Acoes rapidas</h2>
+                        <p>Atalhos para as rotinas mais usadas.</p>
+                    </div>
+                </div>
+
+                <div class="shortcut-list">
+                    <a class="shortcut-item" href="{% url 'cadastrar_chave' %}">
+                        <span><i class="fa-solid fa-plus"></i></span>
+                        <div>
+                            <strong>Novo cadastro</strong>
+                            <small>Chave, pessoa ou local</small>
+                        </div>
+                    </a>
+                    <a class="shortcut-item" href="{% url 'lista_chaves' %}">
+                        <span><i class="fa-solid fa-list-check"></i></span>
+                        <div>
+                            <strong>Consultar chaves</strong>
+                            <small>Status e cadastro completo</small>
+                        </div>
+                    </a>
+                    <a class="shortcut-item" href="{% url 'lista_pessoas' %}">
+                        <span><i class="fa-solid fa-address-card"></i></span>
+                        <div>
+                            <strong>Consultar pessoas</strong>
+                            <small>Autorizados e matriculas</small>
+                        </div>
+                    </a>
+                    <a class="shortcut-item" href="{% url 'relatorio' %}">
+                        <span><i class="fa-solid fa-chart-line"></i></span>
+                        <div>
+                            <strong>Relatorios</strong>
+                            <small>Historico de movimentacoes</small>
+                        </div>
+                    </a>
+                    {% if request.user.is_administrador %}
+                    <a class="shortcut-item" href="{% url 'lista_usuarios' %}">
+                        <span><i class="fa-solid fa-users-gear"></i></span>
+                        <div>
+                            <strong>Usuarios</strong>
+                            <small>{{ total_usuarios }} contas cadastradas</small>
+                        </div>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="panel movement-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Ultimas movimentacoes</h2>
+                        <p>Registro recente de retiradas e devolucoes.</p>
+                    </div>
+                    <a href="{% url 'relatorio' %}">Ver tudo</a>
+                </div>
+
+                <div class="movement-list">
+                    {% for movimentacao in movimentacoes_recentes %}
+                    <div class="movement-row">
+                        <div class="movement-main">
+                            <strong>Chave {{ movimentacao.chave.codigo }}</strong>
+                            <span>{{ movimentacao.pessoa.nome }}</span>
+                        </div>
+                        <div class="movement-meta">
+                            {% if movimentacao.data_hora_devolucao %}
+                            <span class="status-pill returned">Devolvida</span>
+                            {% else %}
+                            <span class="status-pill pending">Retirada</span>
+                            {% endif %}
+                            <small>{{ movimentacao.data_hora_retirada|date:"d/m/Y H:i" }}</small>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="empty-state">
+                        <i class="fa-regular fa-clipboard"></i>
+                        <strong>Nenhuma movimentacao registrada</strong>
+                        <span>As retiradas e devolucoes recentes aparecerao aqui.</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -34,7 +34,23 @@ def logout_view(request):
 
 @login_required
 def inicio(request):
-    return render(request, "index.html")
+    movimentacoes_abertas = Movimentacao.objects.filter(data_hora_devolucao__isnull=True)
+    total_chaves = Chave.objects.count()
+
+    contexto = {
+        "total_chaves": total_chaves,
+        "chaves_ativas": Chave.objects.filter(ativa=True).count(),
+        "chaves_retiradas": movimentacoes_abertas.count(),
+        "chaves_disponiveis": max(total_chaves - movimentacoes_abertas.count(), 0),
+        "total_pessoas": Pessoa.objects.count(),
+        "total_locais": Local.objects.count(),
+        "total_usuarios": Usuario.objects.count(),
+        "movimentacoes_recentes": Movimentacao.objects.select_related(
+            "chave", "pessoa", "operador"
+        )[:6],
+    }
+
+    return render(request, "index.html", contexto)
 
 
 # Retirada
