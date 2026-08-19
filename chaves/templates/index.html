@@ -24,7 +24,7 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link active" href="{% url 'inicio' %}">
-                            <i class="fa-solid fa-house me-1"></i> Inicio
+                            <i class="fa-solid fa-house me-1"></i> Início
                         </a>
                     </li>
                     <li class="nav-item">
@@ -34,7 +34,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'registrar_devolucao' %}">
-                            <i class="fa-solid fa-rotate-left me-1"></i> Devolucao
+                            <i class="fa-solid fa-rotate-left me-1"></i> Devolução
                         </a>
                     </li>
                     <li class="nav-item">
@@ -49,13 +49,13 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'relatorio' %}">
-                            <i class="fa-solid fa-file-lines me-1"></i> Relatorios
+                            <i class="fa-solid fa-file-lines me-1"></i> Relatórios
                         </a>
                     </li>
                     {% if request.user.is_administrador %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'lista_usuarios' %}">
-                            <i class="fa-solid fa-users-gear me-1"></i> Usuarios
+                            <i class="fa-solid fa-users-gear me-1"></i> Usuários
                         </a>
                     </li>
                     {% endif %}
@@ -85,7 +85,7 @@
             <div>
                 <span class="eyebrow">Painel operacional</span>
                 <h1>Controle de Chaves</h1>
-                <p>Acompanhe retiradas, devolucoes e cadastros em um unico lugar.</p>
+                <p>Acompanhe retiradas, devoluções e cadastros em um único lugar.</p>
             </div>
             <div class="header-actions">
                 <a class="btn btn-accent" href="{% url 'retirada' %}">
@@ -94,7 +94,7 @@
                 </a>
                 <a class="btn btn-light-action" href="{% url 'registrar_devolucao' %}">
                     <i class="fa-solid fa-rotate-left"></i>
-                    Registrar devolucao
+                    Registrar devolução
                 </a>
             </div>
         </section>
@@ -103,7 +103,7 @@
             <article class="metric-card">
                 <span class="metric-icon available"><i class="fa-solid fa-circle-check"></i></span>
                 <div>
-                    <p>Chaves disponiveis</p>
+                    <p>Chaves disponíveis</p>
                     <strong>{{ chaves_disponiveis }}</strong>
                 </div>
             </article>
@@ -134,7 +134,7 @@
             <div class="panel">
                 <div class="panel-heading">
                     <div>
-                        <h2>Acoes rapidas</h2>
+                        <h2>Ações rápidas</h2>
                         <p>Atalhos para as rotinas mais usadas.</p>
                     </div>
                 </div>
@@ -158,21 +158,21 @@
                         <span><i class="fa-solid fa-address-card"></i></span>
                         <div>
                             <strong>Consultar pessoas</strong>
-                            <small>Autorizados e matriculas</small>
+                            <small>Autorizados e matrículas</small>
                         </div>
                     </a>
                     <a class="shortcut-item" href="{% url 'relatorio' %}">
                         <span><i class="fa-solid fa-chart-line"></i></span>
                         <div>
-                            <strong>Relatorios</strong>
-                            <small>Historico de movimentacoes</small>
+                            <strong>Relatórios</strong>
+                            <small>Histórico de movimentações</small>
                         </div>
                     </a>
                     {% if request.user.is_administrador %}
                     <a class="shortcut-item" href="{% url 'lista_usuarios' %}">
                         <span><i class="fa-solid fa-users-gear"></i></span>
                         <div>
-                            <strong>Usuarios</strong>
+                            <strong>Usuários</strong>
                             <small>{{ total_usuarios }} contas cadastradas</small>
                         </div>
                     </a>
@@ -183,8 +183,8 @@
             <div class="panel movement-panel">
                 <div class="panel-heading">
                     <div>
-                        <h2>Ultimas movimentacoes</h2>
-                        <p>Registro recente de retiradas e devolucoes.</p>
+                        <h2>Últimas movimentações</h2>
+                        <p>Registro recente de retiradas e devoluções.</p>
                     </div>
                     <a href="{% url 'relatorio' %}">Ver tudo</a>
                 </div>
@@ -208,8 +208,8 @@
                     {% empty %}
                     <div class="empty-state">
                         <i class="fa-regular fa-clipboard"></i>
-                        <strong>Nenhuma movimentacao registrada</strong>
-                        <span>As retiradas e devolucoes recentes aparecerao aqui.</span>
+                        <strong>Nenhuma movimentação registrada</strong>
+                        <span>As retiradas e devoluções recentes aparecerão aqui.</span>
                     </div>
                     {% endfor %}
                 </div>
