@@ -7,6 +7,7 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from datetime import datetime
+from django.contrib import messages
 
 # Autenticação
 
@@ -231,6 +232,7 @@ def editar_chave(request, chave_id):
     if request.method == "POST":
         chave.codigo = request.POST.get("codigo")
         chave.local = request.POST.get("local")
+        chave.ativa = request.POST.get("status") == "ativa"
         chave.observacoes = request.POST.get("observacoes")
         chave.save()
 
@@ -435,3 +437,43 @@ def relatorio(request):
         "chaves": Chave.objects.all(),
         "pessoas": Pessoa.objects.all(),
     })
+
+@login_required
+def lista_locais(request):
+    locais = Local.objects.all()
+    return render(request, "lista_locais.html", {"locais": locais})
+
+@login_required
+@require_POST
+def remover_local(request, local_id):
+    local = get_object_or_404(Local, id=local_id)
+    if Chave.objects.filter(local=local).exists():
+        messages.error(request, "Não é possível remover este local, pois existem chaves associadas a ele.")
+        return redirect('lista_locais')
+    
+    local.delete()
+    messages.success(request, f'Local "{local.nome}" removido com sucesso.')
+    return redirect('lista_locais')
+
+@login_required
+def editar_local(request, local_id):
+    local = get_object_or_404(Local, id=local_id)
+
+    if request.method == "POST":
+        nome = request.POST.get("nome")
+
+        if not nome or not nome.strip():
+            messages.error(request, "O nome do local é obrigatório!")
+            return redirect('lista_locais')
+
+        nome = nome.strip()
+        if Local.objects.filter(nome__iexact=nome).exclude(id=local_id).exists():
+            messages.error(request, "Já existe um local cadastrado com este nome.")
+            return redirect('lista_locais')
+
+        local.nome = nome
+        local.save()
+        messages.success(request, f'Local "{local.nome}" atualizado com sucesso.')
+        return redirect('lista_locais')
+
+    return render(request, "editar_local.html", {"local": local})

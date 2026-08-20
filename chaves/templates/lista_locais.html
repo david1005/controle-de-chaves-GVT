@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Lista de Pessoas</title>
+    <title>Lista de Locais</title>
 
     <link rel="stylesheet" href="{% static 'css/lista.css' %}" />
     <link rel="icon" type="image/x-icon" href="{% static 'images/icon-home.png' %}" />
@@ -24,6 +24,16 @@
 
     {% include "navbar.html" %}
 
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show"
+             role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
     <div class="container py-4">
 
         <a href="{% url 'inicio' %}" class="btn btn-voltar mb-3">
@@ -37,12 +47,12 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
 
             <h2 class="fw-bold mb-0">
-                Lista de Pessoas
+                Lista de Locais
             </h2>
 
-            <a href="{% url 'cadastrar_chave' %}" class="btn btn-primary">
-                <i class="fa-solid fa-user-plus me-1"></i>
-                Nova pessoa
+            <a href="{% url 'cadastrar_local' %}" class="btn btn-primary">
+                <i class="fa-solid fa-location-dot me-1"></i>
+                Novo local
             </a>
 
         </div>
@@ -55,10 +65,7 @@
                 <thead>
 
                     <tr>
-                        <th>Foto</th>
                         <th>Nome</th>
-                        <th>Cargo</th>
-                        <th>Matrícula</th>
                         <th>Ações</th>
                     </tr>
 
@@ -67,41 +74,39 @@
 
                 <tbody>
 
-                    {% for pessoa in pessoas %}
+                    {% for local in locais %}
 
                     <tr>
 
                         <td>
-                            <div class="preview-foto">
-                                {% if pessoa.foto %}
-                                <img src="{{ pessoa.foto.url }}" alt="Foto de {{ pessoa.nome }}">
-                                {% else %}
-                                <i class="fa-solid fa-user"></i>
-                                {% endif %}
-                            </div>
-                        </td>
-
-                        <td>
-                            {{ pessoa.nome }}
-                        </td>
-
-                        <td>
-                            {{ pessoa.cargo|default:"—" }}
-                        </td>
-
-                        <td>
-                            {{ pessoa.matricula }}
+                            {{ local.nome }}
                         </td>
 
                         <td>
 
-                            <a href="{% url 'editar_pessoa' pessoa.id %}"
-                               class="btn btn-sm btn-outline-primary">
-
-                                <i class="fa-solid fa-pen me-1"></i>
-                                Editar
-
+                            <a href="{% url 'editar_local' local.id %}"
+                            class="btn btn-sm btn-outline-primary">
+                            <i class="fa-solid fa-pen-to-square me-1"></i>
+                            Editar
                             </a>
+                            
+                            <form action="{% url 'remover_local' local.id %}"
+                                  method="post"
+                                  class="d-inline"
+                                  onsubmit="return confirm('Tem certeza que deseja remover o local \'{{ local.nome|escapejs }}\'?');">
+
+                                {% csrf_token %}
+
+                                <button type="submit"
+                                        class="btn btn-sm btn-outline-danger">
+
+                                    <i class="fa-solid fa-trash me-1"></i>
+                                    Remover
+
+                                </button>
+
+                                
+                            </form>
 
                         </td>
 
@@ -112,10 +117,10 @@
 
                     <tr>
 
-                        <td colspan="5"
+                        <td colspan="2"
                             class="text-muted text-center">
 
-                            Nenhuma pessoa cadastrada.
+                            Nenhum local cadastrado.
 
                         </td>
 
@@ -133,7 +138,7 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="{% static 'js/locais.js' %}"></script>
 </body>
 
 </html>

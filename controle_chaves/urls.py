@@ -22,6 +22,8 @@ urlpatterns = [
     path('chaves/', views.lista_chaves, name='lista_chaves'),
     path('chaves-abertas/', views.lista_chaves, name='chaves_abertas'),
     path('pessoas/', views.lista_pessoas, name='lista_pessoas'),
+    path('locais/', views.lista_locais, name='lista_locais'),
+    path('locais/<int:local_id>/remover/', views.remover_local, name='remover_local'),
 
     # Chaves, Locais — cadastro/edição
     path('chaves/cadastrar/', views.cadastrar_chave, name='cadastrar_chave'),
@@ -29,6 +31,7 @@ urlpatterns = [
     path('chaves/<int:chave_id>/inativar/', views.inativar_chave, name='inativar_chave'),
     path('chaves/<int:chave_id>/reativar/', views.reativar_chave, name='reativar_chave'),
     path('locais/cadastrar/', views.cadastrar_local, name='cadastrar_local'),
+    path('locais/<int:local_id>/editar/', views.editar_local, name='editar_local'),
 
     # Pessoas
     path('pessoas/cadastrar/', views.cadastrar_pessoa, name='cadastrar_pessoa'),
